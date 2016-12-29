@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressLint("ViewConstructor")
 final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeListener {
-
     private static final int RECENT_INDEX = 0;
     private static final int PEOPLE_INDEX = 1;
     private static final int NATURE_INDEX = 2;
@@ -48,9 +47,12 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
     private final int themeAccentColor;
     @ColorInt
     private final int themeIconColor;
+
     private final ImageView[] emojiTabs;
+
     @Nullable
     OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+
     private int emojiTabLastSelectedIndex = -1;
     private RecentEmojiGridView recentGridView;
 
@@ -110,7 +112,7 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
     }
 
     private void tintIcons() {
-        for (ImageView emojiTab : emojiTabs) {
+        for (final ImageView emojiTab : emojiTabs) {
             emojiTab.setColorFilter(themeIconColor, PorterDuff.Mode.SRC_IN);
         }
 

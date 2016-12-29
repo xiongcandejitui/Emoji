@@ -14,7 +14,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_recent"
-            android:src="@drawable/emoji_recent"/>
+            android:src="@drawable/emoji_recent" />
 
         <ImageButton
             android:id="@+id/emojis_tab_1_people"
@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_people"
-            android:src="@drawable/emoji_people"/>
+            android:src="@drawable/emoji_people" />
 
         <ImageButton
             android:id="@+id/emojis_tab_2_nature"
@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_nature"
-            android:src="@drawable/emoji_nature"/>
+            android:src="@drawable/emoji_nature" />
 
         <ImageButton
             android:id="@+id/emojis_tab_3_food"
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_food"
-            android:src="@drawable/emoji_food"/>
+            android:src="@drawable/emoji_food" />
 
         <ImageButton
             android:id="@+id/emojis_tab_4_sport"
@@ -50,7 +50,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_sport"
-            android:src="@drawable/emoji_sport"/>
+            android:src="@drawable/emoji_sport" />
 
         <ImageButton
             android:id="@+id/emojis_tab_5_cars"
@@ -59,7 +59,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_cars"
-            android:src="@drawable/emoji_cars"/>
+            android:src="@drawable/emoji_cars" />
 
         <ImageButton
             android:id="@+id/emojis_tab_6_electronics"
@@ -68,7 +68,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_electronics"
-            android:src="@drawable/emoji_electronics"/>
+            android:src="@drawable/emoji_electronics" />
 
         <ImageButton
             android:id="@+id/emojis_tab_7_symbols"
@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_symbols"
-            android:src="@drawable/emoji_symbols"/>
+            android:src="@drawable/emoji_symbols" />
 
         <ImageButton
             android:id="@+id/emojis_backspace"
@@ -86,16 +86,16 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/emoji_backspace"
-            android:src="@drawable/emoji_backspace_back_normal"/>
+            android:src="@drawable/emoji_backspace_back_normal" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#626e76"/>
+        android:background="@color/emoji_divider" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/emojis_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 </merge>

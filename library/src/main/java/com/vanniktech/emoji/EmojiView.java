@@ -43,15 +43,12 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
     private static final long INITIAL_INTERVAL = TimeUnit.SECONDS.toMillis(1) / 2;
     private static final int NORMAL_INTERVAL = 50;
 
-    @ColorInt
-    private final int themeAccentColor;
-    @ColorInt
-    private final int themeIconColor;
+    @ColorInt private final int themeAccentColor;
+    @ColorInt private final int themeIconColor;
 
     private final ImageView[] emojiTabs;
 
-    @Nullable
-    OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+    @Nullable OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
 
     private int emojiTabLastSelectedIndex = -1;
     private RecentEmojiGridView recentGridView;

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.vanniktech.emoji.EmojiTextView
-    android:id="@+id/emoji_icon"
+<TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="32dp"
     android:layout_height="32dp"
     android:layout_gravity="center"
     android:background="?attr/selectableItemBackground"
     android:gravity="center"
-    app:emojiSize="30dp"
+    android:textAppearance="?android:attr/textAppearanceLarge"
     tools:ignore="Overdraw"/>

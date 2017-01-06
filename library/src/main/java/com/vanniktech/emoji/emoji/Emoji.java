@@ -1,24 +1,24 @@
 package com.vanniktech.emoji.emoji;
 
-import java.io.Serializable;
-
 import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 
 public final class Emoji implements Serializable {
     private static final long serialVersionUID = 1L;
+    @NonNull
+    private final String emoji;
 
-    public static Emoji fromCodePoint(final int codePoint) {
-        return new Emoji(new String(Character.toChars(codePoint)));
+    public Emoji(@NonNull final String emoji) {
+        this.emoji = emoji;
+    }
+
+    public static Emoji fromCodePoints(final int... codePoints) {
+        return new Emoji(new String(codePoints, 0, codePoints.length));
     }
 
     public static Emoji fromChar(final char ch) {
         return new Emoji(Character.toString(ch));
-    }
-
-    @NonNull private final String emoji;
-
-    public Emoji(@NonNull final String emoji) {
-        this.emoji = emoji;
     }
 
     @NonNull

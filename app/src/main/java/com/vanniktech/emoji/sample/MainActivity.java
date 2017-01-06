@@ -7,8 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
-import com.vanniktech.emoji.EmojiEditText;
+
 import com.vanniktech.emoji.EmojiPopup;
 import com.vanniktech.emoji.emoji.Emoji;
 import com.vanniktech.emoji.listeners.OnEmojiBackspaceClickListener;
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private EmojiPopup emojiPopup;
 
-    private EmojiEditText editText;
+    private EditText editText;
     private ViewGroup rootView;
     private ImageView emojiButton;
 
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         chatAdapter = new ChatAdapter();
 
-        editText = (EmojiEditText) findViewById(R.id.main_activity_chat_bottom_message_edittext);
+        editText = (EditText) findViewById(R.id.main_activity_chat_bottom_message_edittext);
         rootView = (ViewGroup) findViewById(R.id.main_activity_root_view);
         emojiButton = (ImageView) findViewById(R.id.main_activity_emoji);
 

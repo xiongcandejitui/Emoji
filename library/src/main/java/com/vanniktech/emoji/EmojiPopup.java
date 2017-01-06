@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import com.vanniktech.emoji.emoji.Emoji;
@@ -28,25 +29,21 @@ import static com.vanniktech.emoji.Utils.checkNotNull;
 
 public final class EmojiPopup {
     private static final int MIN_KEYBOARD_HEIGHT = 100;
-
-    private final EmojiEditText emojiEditText;
     final View rootView;
     final Context context;
-
+    @NonNull
+    final RecentEmoji recentEmoji;
+    final PopupWindow popupWindow;
+    private final EditText emojiEditText;
     int keyBoardHeight;
     boolean isPendingOpen;
     boolean isKeyboardOpen;
-
-    @Nullable OnEmojiPopupShownListener onEmojiPopupShownListener;
-    @Nullable OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
-    @Nullable OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
-    @Nullable OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
-    @Nullable OnEmojiClickedListener onEmojiClickedListener;
-    @Nullable OnEmojiPopupDismissListener onEmojiPopupDismissListener;
-
-    @NonNull final RecentEmoji recentEmoji;
-
-    final PopupWindow popupWindow;
+    @Nullable
+    OnEmojiPopupShownListener onEmojiPopupShownListener;
+    @Nullable
+    OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
+    @Nullable
+    OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
     private final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
@@ -88,8 +85,14 @@ public final class EmojiPopup {
             }
         }
     };
+    @Nullable
+    OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+    @Nullable
+    OnEmojiClickedListener onEmojiClickedListener;
+    @Nullable
+    OnEmojiPopupDismissListener onEmojiPopupDismissListener;
 
-    EmojiPopup(@NonNull final View rootView, @NonNull final EmojiEditText emojiEditText, @Nullable final RecentEmoji recent) {
+    EmojiPopup(@NonNull final View rootView, @NonNull final EditText emojiEditText, @Nullable final RecentEmoji recent) {
         this.context = rootView.getContext();
         this.rootView = rootView;
         this.emojiEditText = emojiEditText;
@@ -101,7 +104,7 @@ public final class EmojiPopup {
         final EmojiView emojiView = new EmojiView(context, new OnEmojiClickedListener() {
             @Override
             public void onEmojiClicked(final Emoji emoji) {
-                emojiEditText.input(emoji);
+                emojiEditText.append(emoji.getEmoji());
                 recentEmoji.addEmoji(emoji);
 
                 if (onEmojiClickedListener != null) {
@@ -113,7 +116,7 @@ public final class EmojiPopup {
         emojiView.setOnEmojiBackspaceClickListener(new OnEmojiBackspaceClickListener() {
             @Override
             public void onEmojiBackspaceClicked(final View v) {
-                emojiEditText.backspace();
+                emojiEditText.setText(emojiEditText.getText().subSequence(0, emojiEditText.length() - 1));
 
                 if (onEmojiBackspaceClickListener != null) {
                     onEmojiBackspaceClickListener.onEmojiBackspaceClicked(v);
@@ -200,27 +203,33 @@ public final class EmojiPopup {
     }
 
     public static final class Builder {
+        @NonNull
+        private final View rootView;
+        @Nullable
+        private OnEmojiPopupShownListener onEmojiPopupShownListener;
+        @Nullable
+        private OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
+        @Nullable
+        private OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
+        @Nullable
+        private OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+        @Nullable
+        private OnEmojiClickedListener onEmojiClickedListener;
+        @Nullable
+        private OnEmojiPopupDismissListener onEmojiPopupDismissListener;
+        @Nullable
+        private RecentEmoji recentEmoji;
+
+        private Builder(final View rootView) {
+            this.rootView = checkNotNull(rootView, "The rootView can't be null");
+        }
+
         /**
          * @param rootView the rootView of your layout.xml which will be used for calculating the height of the keyboard
          * @return builder for building {@link EmojiPopup}
          */
         public static Builder fromRootView(final View rootView) {
             return new Builder(rootView);
-        }
-
-        @NonNull private final View rootView;
-
-        @Nullable private OnEmojiPopupShownListener onEmojiPopupShownListener;
-        @Nullable private OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
-        @Nullable private OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
-        @Nullable private OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
-        @Nullable private OnEmojiClickedListener onEmojiClickedListener;
-        @Nullable private OnEmojiPopupDismissListener onEmojiPopupDismissListener;
-
-        @Nullable private RecentEmoji recentEmoji;
-
-        private Builder(final View rootView) {
-            this.rootView = checkNotNull(rootView, "The rootView can't be null");
         }
 
         public Builder setOnSoftKeyboardCloseListener(@Nullable final OnSoftKeyboardCloseListener listener) {
@@ -263,7 +272,7 @@ public final class EmojiPopup {
             return this;
         }
 
-        public EmojiPopup build(final EmojiEditText emojiEditText) {
+        public EmojiPopup build(final EditText emojiEditText) {
             checkNotNull(emojiEditText, "EmojiEditText can't be null");
 
             final EmojiPopup emojiPopup = new EmojiPopup(rootView, emojiEditText, recentEmoji);

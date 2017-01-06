@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/main_activity_root_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -32,15 +30,14 @@
             android:src="@drawable/emoji_people"
             tools:ignore="ContentDescription"/>
 
-        <com.vanniktech.emoji.EmojiEditText
+        <EditText
             android:id="@+id/main_activity_chat_bottom_message_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:imeOptions="actionSend"
             android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="3"
-            app:emojiSize="26sp"/>
+            android:maxLines="3" />
 
         <ImageView
             android:id="@+id/main_activity_send"

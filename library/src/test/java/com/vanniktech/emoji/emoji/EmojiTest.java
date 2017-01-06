@@ -1,14 +1,14 @@
 package com.vanniktech.emoji.emoji;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("checkstyle:magicnumber")
 public class EmojiTest {
     @Test
     public void fromCodePoint() {
-        final Emoji emoji = Emoji.fromCodePoint(0x1f600);
+        final Emoji emoji = Emoji.fromCodePoints(0x1f600);
         assertThat(emoji.getEmoji()).isEqualTo("😀");
     }
 

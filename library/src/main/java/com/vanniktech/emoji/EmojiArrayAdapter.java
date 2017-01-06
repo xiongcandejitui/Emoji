@@ -1,11 +1,7 @@
 package com.vanniktech.emoji;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,20 +12,32 @@ import android.widget.TextView;
 import com.vanniktech.emoji.emoji.Emoji;
 import com.vanniktech.emoji.listeners.OnEmojiClickedListener;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
-    /** we need this because Arrays.asList does not support {@link Collection#clear()} */
+
+    static Typeface typeface;
+    @Nullable
+    OnEmojiClickedListener onEmojiClickedListener;
+
+    @SuppressWarnings("PMD.UseVarargs")
+    EmojiArrayAdapter(final Context context, final Emoji[] data) {
+        super(context, R.layout.emoji_text_view, toList(data));
+
+        typeface = Typeface.createFromAsset(context.getAssets(), "emojione-android.ttf");
+    }
+
+    /**
+     * we need this because Arrays.asList does not support {@link Collection#clear()}
+     */
     @SuppressWarnings("PMD.UseVarargs")
     private static List<Emoji> toList(final Emoji[] data) {
         final List<Emoji> list = new ArrayList<>(data.length);
         Collections.addAll(list, data);
         return list;
-    }
-
-    @Nullable OnEmojiClickedListener onEmojiClickedListener;
-
-    @SuppressWarnings("PMD.UseVarargs")
-    EmojiArrayAdapter(final Context context, final Emoji[] data) {
-        super(context, R.layout.emoji_text_view, toList(data));
     }
 
     @Override
@@ -38,8 +46,10 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.emoji_text_view, parent, false);
 
+            ((TextView) view).setTypeface(typeface);
+
             final ViewHolder holder = new ViewHolder();
-            holder.icon = (TextView) view.findViewById(R.id.emoji_icon);
+            holder.icon = (TextView) view;
             view.setTag(holder);
         }
 

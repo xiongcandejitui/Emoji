@@ -4,7 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.vanniktech.emoji.EmojiTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +36,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final EmojiTextView textView;
 
         ChatViewHolder(final View view) {
             super(view);
 
-            textView = (TextView) view.findViewById(R.id.adapter_chat_text_view);
+            textView = (EmojiTextView) view.findViewById(R.id.adapter_chat_text_view);
         }
     }
 }

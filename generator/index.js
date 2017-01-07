@@ -1,142 +1,76 @@
-const Fsp = require("fs-promise");
-const Git = require("nodegit");
-const Dict = require("collections/dict");
+const MultiMap = require("collections/multi-map");
+
+const fs = require("fs-promise");
+const git = require("simple-git");
 const _ = require("underscore");
 
-Fsp.remove("out").then(() => {
+String.prototype.capitalizeFirstLetter = function () {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
 
-    // Is there already a cloned repo? If yes, pull. If not, clone.
-    return Fsp.stat("build/emojione").then(() => {
-        console.log("Updating repo...");
+async function run() {
+    try {
+        await fs.stat("build/emojione");
 
-        let repository;
-
-        return Git.Repository.open("build/emojione").then((repo) => {
-            repository = repo;
-
-            return repository.fetchAll(buildGitFetchOptions());
-        }).then(() => {
-            return repository.mergeBranches("master", "origin/master");
-        }).catch(error => {
-            console.error(error);
-
-            process.exit(1);
-        })
-    }).catch((error) => {
+        console.log("Existing repo found. Pulling changes...");
+        await git("build/emojione").pull();
+    } catch (ignored) {
         console.log("Cloning repo...");
+        await git().clone("https://github.com/Ranks/emojione", "build/emojione");
+    }
 
-        return Git.Clone("https://github.com/Ranks/emojione", "build/emojione", buildGitCloneOptions())
-    })
-}).then(() => {
-    clearProgress();
-    console.log("Copying drawables...");
+    console.log("Copying resources...");
+    await fs.copy("build/emojione/assets/fonts/emojione-android.ttf", "../library/src/main/assets/fonts/emojione.ttf");
 
-    return Fsp.mkdirp("out/res/drawable");
-}).then(() => {
-    return Fsp.readdir("build/emojione/assets/svg");
-}).then((items) => {
-    const size = items.length;
-    let counter = 0;
-
-    return items.reduce((promise, item) => promise.then(() => {
-        counter++;
-
-        printProgress(counter, size);
-
-        return Fsp.copy("build/emojione/assets/svg/" + item, "out/res/drawable/emoji_" + item)
-    }), Promise.resolve());
-// }).then(() => {
-//     return Fsp.readdir("build/emojione/assets/other/category_icons")
-// }).then((items) => {
-//     return items.reduce((promise, item) => promise.then(() => {
-//         return Fsp.copy("build/emojione/assets/other/category_icons/" + item, "out/res/drawable/emoji_category_" + item)
-//     }), Promise.resolve());
-}).then(() => {
-    clearProgress();
-
-}).then(() => {
-    return Fsp.mkdirp("out/java");
-}).then(() => {
     console.log("Generating java code...");
+    const emojiMapping = JSON.parse(await fs.readFile("build/emojione/emoji.json", "utf-8"));
+    const map = new MultiMap();
 
-    return Fsp.readFile("build/emojione/emoji.json", "utf-8")
-}).then((content) => {
-    const emojis = JSON.parse(content);
-    const dict = new Dict();
-
-    Object.entries(emojis).forEach(([key, emoji]) => {
+    Object.values(emojiMapping).sort((first, second) => {
+        return first.emoji_order - second.emoji_order;
+    }).forEach(emoji => {
         if (emoji.category !== "modifier") {
-            if (dict.has(emoji.category)) {
-                dict.get(emoji.category).push(emoji.unicode);
+            if (map.has(emoji.category)) {
+                map.get(emoji.category).push(emoji.unicode);
             } else {
-                dict.add(new Array(emoji.unicode), emoji.category);
+                map.set(emoji.category, new Array(emoji.unicode));
             }
         }
     });
 
-    return dict.reduce((promise, values, key) => promise.then(() => {
-        return Fsp.readFile("Category.java", "utf-8").then((content) => {
-            const name = firstToUpperCase(key) + "Category";
-            const data = values.sort((first, second) => {
-                return second.emoji_order - first.emoji_order
-            }).map((it) => {
-                return "Emoji.fromCodePoints(" + it.split("-").map(unicode => "0x" + unicode).join(", ") + ")";
-            }).join(",\n            ");
+    const categoryTemplate = await fs.readFile("Category.java", "utf-8");
+    const emojiCategoriesTemplate = await fs.readFile("EmojiCategories.java", "utf-8");
 
-            return Fsp.writeFile("out/java/" + name + ".java", _(content).template()({
+    map.forEach(async(unicodes, category) => {
+        const name = category.capitalizeFirstLetter() + "Category";
+        const data = unicodes.map((it) => {
+            return "Emoji.fromCodePoints(" + it.split("-").map(unicode => "0x" + unicode).join(", ") + ")";
+        }).join(",\n            ");
+
+        await fs.writeFile("../library/src/main/java/com/vanniktech/emoji/emoji/category/" + name + ".java",
+            _(categoryTemplate).template()({
                 name: name,
                 data: data,
-                icon: key
+                icon: category
             }));
-        })
-    }), Promise.resolve()).then(() => {
-        return Fsp.readFile("EmojiCategories.java", "utf-8").then((content) => {
-            const data = dict.keys().map((it) => {
-                return "categories.put(\"" + it + "\", new " + firstToUpperCase(it) + "Category());"
-            }).join("\n        ");
-
-            return Fsp.writeFile("out/java/EmojiCategories.java", _(content).template()({data: data}));
-        })
     });
-}).then(() => {
-    process.exit(0);
-}).catch(error => {
-    console.error(error);
 
-    process.exit(1);
-});
+    const importData = map.keys().map((category) => {
+        return "import com.vanniktech.emoji.emoji.category." + category.capitalizeFirstLetter() + "Category;"
+    }).join("\n");
 
-function buildGitFetchOptions() {
-    const fetchOptions = new Git.FetchOptions();
-    const callbacks = new Git.RemoteCallbacks();
+    const categoryData = map.keys().map((category) => {
+        return "categories.put(\"" + category + "\", new " + category.capitalizeFirstLetter() + "Category());"
+    }).join("\n        ");
 
-    fetchOptions.callbacks = callbacks;
-    callbacks.transferProgress = progressInfo => {
-        clearProgress();
-        printProgress(progressInfo.receivedObjects(), progressInfo.totalObjects());
-    };
-
-    return fetchOptions;
+    await fs.writeFile("../library/src/main/java/com/vanniktech/emoji/emoji/EmojiCategories.java",
+        _(emojiCategoriesTemplate).template()({
+            imports: importData,
+            mapping: categoryData
+        }))
 }
 
-function buildGitCloneOptions() {
-    const options = new Git.CloneOptions();
-
-    options.fetchOpts = buildGitFetchOptions();
-
-    return options;
-}
-
-function printProgress(current, total) {
-    clearProgress();
-    process.stdout.write(current + "/" + total);
-}
-
-function clearProgress() {
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0);
-}
-
-function firstToUpperCase(str) {
-    return str.substr(0, 1).toUpperCase() + str.substr(1);
-}
+run().then()
+    .catch(err => {
+        console.log(err);
+    });

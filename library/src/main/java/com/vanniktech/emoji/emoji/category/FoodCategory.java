@@ -1,14 +1,16 @@
-package com.vanniktech.emoji.emoji;
+package com.vanniktech.emoji.emoji.category;
 
 import android.support.annotation.DrawableRes;
 
 import com.vanniktech.emoji.R;
+import com.vanniktech.emoji.emoji.Emoji;
+import com.vanniktech.emoji.emoji.EmojiCategory;
 
 public class FoodCategory implements EmojiCategory {
 
     private static final Emoji[] DATA = new Emoji[]{
             Emoji.fromCodePoints(0x1f347),
-            Emoji.fromCodePoints(0x1f944),
+            Emoji.fromCodePoints(0x1f348),
             Emoji.fromCodePoints(0x1f349),
             Emoji.fromCodePoints(0x1f34a),
             Emoji.fromCodePoints(0x1f34b),
@@ -49,7 +51,7 @@ public class FoodCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f373),
             Emoji.fromCodePoints(0x1f958),
             Emoji.fromCodePoints(0x1f372),
-            Emoji.fromCodePoints(0x1f348),
+            Emoji.fromCodePoints(0x1f957),
             Emoji.fromCodePoints(0x1f37f),
             Emoji.fromCodePoints(0x1f371),
             Emoji.fromCodePoints(0x1f358),
@@ -91,7 +93,7 @@ public class FoodCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f943),
             Emoji.fromCodePoints(0x1f37d),
             Emoji.fromCodePoints(0x1f374),
-            Emoji.fromCodePoints(0x1f957)
+            Emoji.fromCodePoints(0x1f944)
     };
 
     @Override

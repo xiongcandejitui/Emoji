@@ -1,14 +1,16 @@
-package com.vanniktech.emoji.emoji;
+package com.vanniktech.emoji.emoji.category;
 
 import android.support.annotation.DrawableRes;
 
 import com.vanniktech.emoji.R;
+import com.vanniktech.emoji.emoji.Emoji;
+import com.vanniktech.emoji.emoji.EmojiCategory;
 
 public class TravelCategory implements EmojiCategory {
 
     private static final Emoji[] DATA = new Emoji[]{
             Emoji.fromCodePoints(0x1f3ce),
-            Emoji.fromCodePoints(0x1f3c1),
+            Emoji.fromCodePoints(0x1f3cd),
             Emoji.fromCodePoints(0x1f5fe),
             Emoji.fromCodePoints(0x1f3d4),
             Emoji.fromCodePoints(0x26f0),
@@ -66,7 +68,7 @@ public class TravelCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f684),
             Emoji.fromCodePoints(0x1f685),
             Emoji.fromCodePoints(0x1f686),
-            Emoji.fromCodePoints(0x1f3cd),
+            Emoji.fromCodePoints(0x1f687),
             Emoji.fromCodePoints(0x1f688),
             Emoji.fromCodePoints(0x1f689),
             Emoji.fromCodePoints(0x1f68a),
@@ -124,7 +126,7 @@ public class TravelCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f386),
             Emoji.fromCodePoints(0x1f387),
             Emoji.fromCodePoints(0x1f391),
-            Emoji.fromCodePoints(0x1f687)
+            Emoji.fromCodePoints(0x1f3c1)
     };
 
     @Override

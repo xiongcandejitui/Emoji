@@ -30,7 +30,7 @@
             android:src="@drawable/emoji_people"
             tools:ignore="ContentDescription"/>
 
-        <EditText
+        <com.vanniktech.emoji.EmojiEditText
             android:id="@+id/main_activity_chat_bottom_message_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

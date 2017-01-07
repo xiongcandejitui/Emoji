@@ -2,19 +2,21 @@ package com.vanniktech.emoji.emoji;
 
 import android.support.v4.util.Pair;
 
+<%= imports %>
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class EmojiCategories {
 
-    private static final HashMap<String, EmojiCategory> categories;
+    private static final LinkedHashMap<String, EmojiCategory> categories;
 
     static {
-        categories = new HashMap<>();
+        categories = new LinkedHashMap<>();
 
-        <%= data %>
+        <%= mapping %>
     }
 
     protected EmojiCategories() {

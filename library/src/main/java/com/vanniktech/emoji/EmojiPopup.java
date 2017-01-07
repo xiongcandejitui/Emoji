@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import com.vanniktech.emoji.emoji.Emoji;
@@ -34,7 +33,7 @@ public final class EmojiPopup {
     @NonNull
     final RecentEmoji recentEmoji;
     final PopupWindow popupWindow;
-    private final EditText emojiEditText;
+    private final EmojiEditText emojiEditText;
     int keyBoardHeight;
     boolean isPendingOpen;
     boolean isKeyboardOpen;
@@ -92,7 +91,7 @@ public final class EmojiPopup {
     @Nullable
     OnEmojiPopupDismissListener onEmojiPopupDismissListener;
 
-    EmojiPopup(@NonNull final View rootView, @NonNull final EditText emojiEditText, @Nullable final RecentEmoji recent) {
+    EmojiPopup(@NonNull final View rootView, @NonNull final EmojiEditText emojiEditText, @Nullable final RecentEmoji recent) {
         this.context = rootView.getContext();
         this.rootView = rootView;
         this.emojiEditText = emojiEditText;
@@ -104,7 +103,7 @@ public final class EmojiPopup {
         final EmojiView emojiView = new EmojiView(context, new OnEmojiClickedListener() {
             @Override
             public void onEmojiClicked(final Emoji emoji) {
-                emojiEditText.append(emoji.getEmoji());
+                emojiEditText.input(emoji);
                 recentEmoji.addEmoji(emoji);
 
                 if (onEmojiClickedListener != null) {
@@ -116,7 +115,7 @@ public final class EmojiPopup {
         emojiView.setOnEmojiBackspaceClickListener(new OnEmojiBackspaceClickListener() {
             @Override
             public void onEmojiBackspaceClicked(final View v) {
-                emojiEditText.setText(emojiEditText.getText().subSequence(0, emojiEditText.length() - 1));
+                emojiEditText.backspace();
 
                 if (onEmojiBackspaceClickListener != null) {
                     onEmojiBackspaceClickListener.onEmojiBackspaceClicked(v);
@@ -272,7 +271,7 @@ public final class EmojiPopup {
             return this;
         }
 
-        public EmojiPopup build(final EditText emojiEditText) {
+        public EmojiPopup build(final EmojiEditText emojiEditText) {
             checkNotNull(emojiEditText, "EmojiEditText can't be null");
 
             final EmojiPopup emojiPopup = new EmojiPopup(rootView, emojiEditText, recentEmoji);

@@ -1,8 +1,10 @@
-package com.vanniktech.emoji.emoji;
+package com.vanniktech.emoji.emoji.category;
 
 import android.support.annotation.DrawableRes;
 
 import com.vanniktech.emoji.R;
+import com.vanniktech.emoji.emoji.Emoji;
+import com.vanniktech.emoji.emoji.EmojiCategory;
 
 public class <%= name %> implements EmojiCategory {
 

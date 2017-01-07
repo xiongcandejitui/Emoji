@@ -1,7 +1,6 @@
 package com.vanniktech.emoji;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +18,12 @@ import java.util.List;
 
 final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
 
-    static Typeface typeface;
     @Nullable
     OnEmojiClickedListener onEmojiClickedListener;
 
     @SuppressWarnings("PMD.UseVarargs")
     EmojiArrayAdapter(final Context context, final Emoji[] data) {
         super(context, R.layout.emoji_text_view, toList(data));
-
-        typeface = Typeface.createFromAsset(context.getAssets(), "emojione-android.ttf");
     }
 
     /**
@@ -45,8 +41,6 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
         View view = convertView;
         if (view == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.emoji_text_view, parent, false);
-
-            ((TextView) view).setTypeface(typeface);
 
             final ViewHolder holder = new ViewHolder();
             holder.icon = (TextView) view;

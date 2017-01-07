@@ -1,14 +1,16 @@
-package com.vanniktech.emoji.emoji;
+package com.vanniktech.emoji.emoji.category;
 
 import android.support.annotation.DrawableRes;
 
 import com.vanniktech.emoji.R;
+import com.vanniktech.emoji.emoji.Emoji;
+import com.vanniktech.emoji.emoji.EmojiCategory;
 
 public class NatureCategory implements EmojiCategory {
 
     private static final Emoji[] DATA = new Emoji[]{
             Emoji.fromCodePoints(0x1f648),
-            Emoji.fromCodePoints(0x1f38d),
+            Emoji.fromCodePoints(0x1f649),
             Emoji.fromCodePoints(0x1f64a),
             Emoji.fromCodePoints(0x1f4a6),
             Emoji.fromCodePoints(0x1f4a8),
@@ -87,7 +89,7 @@ public class NatureCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f41a),
             Emoji.fromCodePoints(0x1f980),
             Emoji.fromCodePoints(0x1f990),
-            Emoji.fromCodePoints(0x1f649),
+            Emoji.fromCodePoints(0x1f991),
             Emoji.fromCodePoints(0x1f98b),
             Emoji.fromCodePoints(0x1f40c),
             Emoji.fromCodePoints(0x1f41b),
@@ -166,7 +168,7 @@ public class NatureCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f384),
             Emoji.fromCodePoints(0x2728),
             Emoji.fromCodePoints(0x1f38b),
-            Emoji.fromCodePoints(0x1f991)
+            Emoji.fromCodePoints(0x1f38d)
     };
 
     @Override

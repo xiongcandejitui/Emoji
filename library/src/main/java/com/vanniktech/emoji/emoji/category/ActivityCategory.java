@@ -1,14 +1,16 @@
-package com.vanniktech.emoji.emoji;
+package com.vanniktech.emoji.emoji.category;
 
 import android.support.annotation.DrawableRes;
 
 import com.vanniktech.emoji.R;
+import com.vanniktech.emoji.emoji.Emoji;
+import com.vanniktech.emoji.emoji.EmojiCategory;
 
 public class ActivityCategory implements EmojiCategory {
 
     private static final Emoji[] DATA = new Emoji[]{
             Emoji.fromCodePoints(0x1f47e),
-            Emoji.fromCodePoints(0x1f3f9),
+            Emoji.fromCodePoints(0x1f574),
             Emoji.fromCodePoints(0x1f93a),
             Emoji.fromCodePoints(0x1f3c7),
             Emoji.fromCodePoints(0x1f3c7, 0x1f3fb),
@@ -76,7 +78,7 @@ public class ActivityCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f93d),
             Emoji.fromCodePoints(0x1f93d, 0x1f3fb),
             Emoji.fromCodePoints(0x1f93d, 0x1f3fc),
-            Emoji.fromCodePoints(0x1f574),
+            Emoji.fromCodePoints(0x1f93d, 0x1f3fd),
             Emoji.fromCodePoints(0x1f93d, 0x1f3fe),
             Emoji.fromCodePoints(0x1f93d, 0x1f3ff),
             Emoji.fromCodePoints(0x1f93e),
@@ -145,7 +147,7 @@ public class ActivityCategory implements EmojiCategory {
             Emoji.fromCodePoints(0x1f3bb),
             Emoji.fromCodePoints(0x1f941),
             Emoji.fromCodePoints(0x1f3ac),
-            Emoji.fromCodePoints(0x1f93d, 0x1f3fd)
+            Emoji.fromCodePoints(0x1f3f9)
     };
 
     @Override

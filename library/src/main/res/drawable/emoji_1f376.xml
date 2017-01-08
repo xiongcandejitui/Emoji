@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="64dp"
+        android:height="64dp"
+        android:viewportWidth="64"
+        android:viewportHeight="64">
+    <path
+        android:fillColor="#B7B198"
+        android:pathData="m44.1 50.4c7.6 0 13.8 2.6 13.8 5.8 0 3.2-6.2 5.8-13.8 5.8-7.6 0-13.8-2.6-13.8-5.8 0-3.2 6.1-5.8 13.8-5.8"/>
+    <path
+        android:fillColor="#F9F3D9"
+        android:pathData="m35.6 5.4c-.3 2.2 1.9 6.4 2 8.7.2 3.3-18.4 24.7-8.6 40.5 4.4 7.1 25.7 7.1 30.1 0 9.8-15.8-8.8-37.1-8.6-40.5.1-2.2 2.4-6.5 2-8.7-.7-4.5-16.1-4.5-16.9 0"/>
+    <group>
+        <path
+            android:fillColor="#B7B198"
+            android:pathData="m37 5.7c-.8 4.9 14.9 4.9 14.1 0-.6-4-13.4-4-14.1 0"/>
+        <path
+            android:fillColor="#B7B198"
+            android:pathData="M13,55,C18.58,55,23.1,56.57,23.1,58.5,C23.1,60.43,18.58,62,13,62,C7.42,62,2.9000000000000004,60.43,2.9000000000000004,58.5,C2.9000000000000004,56.57,7.42,55,13,55z"/>
+    </group>
+    <group>
+        <path
+            android:fillColor="#F9F3D9"
+            android:pathData="m2 43.8h22v13.1h-22z"/>
+        <path
+            android:fillColor="#F9F3D9"
+            android:pathData="M13,40,C19.08,40,24,41.70,24,43.8,C24,45.90,19.08,47.599999999999994,13,47.599999999999994,C6.92,47.599999999999994,2,45.90,2,43.8,C2,41.70,6.92,40,13,40z"/>
+        <path
+            android:fillColor="#F9F3D9"
+            android:pathData="M13,53.1,C19.08,53.1,24,54.80,24,56.9,C24,59.00,19.08,60.699999999999996,13,60.699999999999996,C6.92,60.699999999999996,2,59.00,2,56.9,C2,54.80,6.92,53.1,13,53.1z"/>
+    </group>
+    <path
+        android:fillColor="#B7B198"
+        android:pathData="m22.1 45.1c.5-.3.7-.7.7-1.1 0-1.6-4.4-3-9.8-3-5.4 0-9.8 1.3-9.8 3 0 .4.3.8.7 1.1 1.5-1.1 5-1.9 9.1-1.9 4.1 0 7.7.8 9.1 1.9"/>
+    <path
+        android:fillColor="#B4D7EE"
+        android:pathData="m22.1 45.1c-1.5-1.1-5-1.9-9.1-1.9-4.1 0-7.7.8-9.1 1.9 1.5 1.1 5 1.9 9.1 1.9 4.1-.1 7.7-.9 9.1-1.9"/>
+</vector>

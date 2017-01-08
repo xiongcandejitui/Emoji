@@ -2,10 +2,16 @@ const MultiMap = require("collections/multi-map");
 
 const fs = require("fs-promise");
 const git = require("simple-git");
+const path = require('path');
+const svgConverter = require("./svg2vectordrawable");
 const _ = require("underscore");
 
 String.prototype.capitalizeFirstLetter = function () {
     return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+String.prototype.replaceAll = function (search, replacement) {
+    return this.replace(new RegExp(search, 'g'), replacement);
 };
 
 async function run() {
@@ -19,10 +25,19 @@ async function run() {
         await git().clone("https://github.com/Ranks/emojione", "build/emojione");
     }
 
-    console.log("Copying resources...");
-    await fs.copy("build/emojione/assets/fonts/emojione-android.ttf", "../library/src/main/assets/fonts/emojione.ttf");
+    console.log("Converting and copying resources...");
+    await fs.emptyDir("../library/src/main/res/drawable");
+
+    for (const file of await fs.readdir("build/emojione/assets/svg")) {
+        const svg = await fs.readFile("build/emojione/assets/svg/" + file, "utf-8");
+        const vector = await svgConverter.svg2vectorDrawableContent(svg);
+
+        await fs.writeFile("../library/src/main/res/drawable/" + "emoji_" +
+            path.parse(file).name.replaceAll("-", "_") + ".xml", vector);
+    }
 
     console.log("Generating java code...");
+    await fs.emptyDir("../library/src/main/java/com/vanniktech/emoji/emoji/category/");
     const emojiMapping = JSON.parse(await fs.readFile("build/emojione/emoji.json", "utf-8"));
     const map = new MultiMap();
 
@@ -41,7 +56,7 @@ async function run() {
     const categoryTemplate = await fs.readFile("Category.java", "utf-8");
     const emojiCategoriesTemplate = await fs.readFile("EmojiCategories.java", "utf-8");
 
-    map.forEach(async(unicodes, category) => {
+    for (const [category, unicodes] of Array.from(map.entries())) {
         const name = category.capitalizeFirstLetter() + "Category";
         const data = unicodes.map((it) => {
             return "Emoji.fromCodePoints(" + it.split("-").map(unicode => "0x" + unicode).join(", ") + ")";
@@ -53,7 +68,7 @@ async function run() {
                 data: data,
                 icon: category
             }));
-    });
+    }
 
     const importData = map.keys().map((category) => {
         return "import com.vanniktech.emoji.emoji.category." + category.capitalizeFirstLetter() + "Category;"

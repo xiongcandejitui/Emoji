@@ -28,21 +28,25 @@ import static com.vanniktech.emoji.Utils.checkNotNull;
 
 public final class EmojiPopup {
     private static final int MIN_KEYBOARD_HEIGHT = 100;
+
+    private final EmojiEditText emojiEditText;
     final View rootView;
     final Context context;
-    @NonNull
-    final RecentEmoji recentEmoji;
-    final PopupWindow popupWindow;
-    private final EmojiEditText emojiEditText;
+
     int keyBoardHeight;
     boolean isPendingOpen;
     boolean isKeyboardOpen;
-    @Nullable
-    OnEmojiPopupShownListener onEmojiPopupShownListener;
-    @Nullable
-    OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
-    @Nullable
-    OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
+
+    @Nullable OnEmojiPopupShownListener onEmojiPopupShownListener;
+    @Nullable OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
+    @Nullable OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
+    @Nullable OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+    @Nullable OnEmojiClickedListener onEmojiClickedListener;
+    @Nullable OnEmojiPopupDismissListener onEmojiPopupDismissListener;
+
+    @NonNull final RecentEmoji recentEmoji;
+
+    final PopupWindow popupWindow;
     private final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
@@ -84,12 +88,6 @@ public final class EmojiPopup {
             }
         }
     };
-    @Nullable
-    OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
-    @Nullable
-    OnEmojiClickedListener onEmojiClickedListener;
-    @Nullable
-    OnEmojiPopupDismissListener onEmojiPopupDismissListener;
 
     EmojiPopup(@NonNull final View rootView, @NonNull final EmojiEditText emojiEditText, @Nullable final RecentEmoji recent) {
         this.context = rootView.getContext();
@@ -202,33 +200,27 @@ public final class EmojiPopup {
     }
 
     public static final class Builder {
-        @NonNull
-        private final View rootView;
-        @Nullable
-        private OnEmojiPopupShownListener onEmojiPopupShownListener;
-        @Nullable
-        private OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
-        @Nullable
-        private OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
-        @Nullable
-        private OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
-        @Nullable
-        private OnEmojiClickedListener onEmojiClickedListener;
-        @Nullable
-        private OnEmojiPopupDismissListener onEmojiPopupDismissListener;
-        @Nullable
-        private RecentEmoji recentEmoji;
-
-        private Builder(final View rootView) {
-            this.rootView = checkNotNull(rootView, "The rootView can't be null");
-        }
-
         /**
          * @param rootView the rootView of your layout.xml which will be used for calculating the height of the keyboard
          * @return builder for building {@link EmojiPopup}
          */
         public static Builder fromRootView(final View rootView) {
             return new Builder(rootView);
+        }
+
+        @NonNull private final View rootView;
+
+        @Nullable private OnEmojiPopupShownListener onEmojiPopupShownListener;
+        @Nullable private OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
+        @Nullable private OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
+        @Nullable private OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+        @Nullable private OnEmojiClickedListener onEmojiClickedListener;
+        @Nullable private OnEmojiPopupDismissListener onEmojiPopupDismissListener;
+
+        @Nullable private RecentEmoji recentEmoji;
+
+        private Builder(final View rootView) {
+            this.rootView = checkNotNull(rootView, "The rootView can't be null");
         }
 
         public Builder setOnSoftKeyboardCloseListener(@Nullable final OnSoftKeyboardCloseListener listener) {

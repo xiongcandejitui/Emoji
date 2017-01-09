@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
 import com.vanniktech.emoji.emoji.Emoji;
 import com.vanniktech.emoji.emoji.EmojiProvider;
+import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
-
     @SuppressWarnings("PMD.UseVarargs")
     EmojiArrayAdapter(final Context context, final Emoji[] data) {
         super(context, 0, toList(data));
@@ -87,30 +86,29 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
     }
 
     private static class ImageDownloaderTask extends AsyncTask<Integer, Void, Drawable> {
-
-        private static final SparseArrayCompat<Drawable> cache = new SparseArrayCompat<>();
+        private static final SparseArrayCompat<Drawable> CACHE = new SparseArrayCompat<>();
 
         private final WeakReference<ImageView> imageViewReference;
         private final WeakReference<Context> contextReference;
 
-        ImageDownloaderTask(ImageView imageView) {
+        ImageDownloaderTask(final ImageView imageView) {
             imageViewReference = new WeakReference<>(imageView);
             contextReference = new WeakReference<>(imageView.getContext());
         }
 
         @Override
-        protected Drawable doInBackground(Integer... resource) {
+        protected Drawable doInBackground(final Integer... resource) {
             final Context context = contextReference.get();
 
             if (context == null) {
                 return null;
             } else {
-                Drawable result = cache.get(resource[0]);
+                Drawable result = CACHE.get(resource[0]);
 
                 if (result == null) {
                     result = AppCompatResources.getDrawable(context, resource[0]);
 
-                    cache.put(resource[0], result);
+                    CACHE.put(resource[0], result);
                 }
 
                 return result;
@@ -118,9 +116,9 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
         }
 
         @Override
-        protected void onPostExecute(Drawable drawable) {
+        protected void onPostExecute(final Drawable drawable) {
             if (!isCancelled() && drawable != null) {
-                ImageView imageView = imageViewReference.get();
+                final ImageView imageView = imageViewReference.get();
 
                 if (imageView != null) {
                     imageView.setImageDrawable(drawable);

@@ -19,9 +19,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("checkstyle:magicnumber")
 public final class EmojiProvider {
-
-    private static EmojiProvider INSTANCE = new EmojiProvider();
+    private static final EmojiProvider INSTANCE = new EmojiProvider();
 
     private LinkedHashMap<String, EmojiCategory> categories = new LinkedHashMap<>();
     private EmojiTree emojis = new EmojiTree();
@@ -1832,7 +1832,7 @@ public final class EmojiProvider {
     }
 
     public List<Pair<String, EmojiCategory>> getCategories() {
-        List<Pair<String, EmojiCategory>> result = new ArrayList<>();
+        final List<Pair<String, EmojiCategory>> result = new ArrayList<>();
 
         for (Map.Entry<String, EmojiCategory> entry : categories.entrySet()) {
             result.add(new Pair<>(entry.getKey(), entry.getValue()));
@@ -1842,7 +1842,7 @@ public final class EmojiProvider {
     }
 
     @NonNull
-    public EmojiInfo findEmoji(@NonNull CharSequence candiate){
+    public EmojiInfo findEmoji(@NonNull final CharSequence candiate) {
         return emojis.findEmoji(candiate);
     }
 }

@@ -27,8 +27,8 @@ final class RecentEmojiGridView extends EmojiGridView {
 
         setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(onEmojiClickedListener != null) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+                if (onEmojiClickedListener != null) {
                     onEmojiClickedListener.onEmojiClicked(emojiArrayAdapter.getItem(position));
                 }
             }

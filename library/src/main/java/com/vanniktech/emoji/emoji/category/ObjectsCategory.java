@@ -6,8 +6,8 @@ import com.vanniktech.emoji.R;
 import com.vanniktech.emoji.emoji.Emoji;
 import com.vanniktech.emoji.emoji.EmojiCategory;
 
+@SuppressWarnings("checkstyle:magicnumber")
 public class ObjectsCategory implements EmojiCategory {
-
     private static final Emoji[] DATA = new Emoji[]{
             Emoji.fromCodePoints(0x2620),
             Emoji.fromCodePoints(0x1f48c),

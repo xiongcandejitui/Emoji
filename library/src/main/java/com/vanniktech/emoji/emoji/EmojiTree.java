@@ -8,10 +8,9 @@ import android.support.v4.util.SparseArrayCompat;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public final class EmojiTree {
-
     private EmojiNode root = new EmojiNode(null);
 
-    public void add(@NonNull String unicode, @DrawableRes int resource) {
+    public void add(@NonNull final String unicode, @DrawableRes final int resource) {
         EmojiNode current = root;
 
         for (int i = 0; i < unicode.length(); i++) {
@@ -20,7 +19,7 @@ public final class EmojiTree {
     }
 
     @NonNull
-    public EmojiInfo findEmoji(CharSequence candidate) {
+    public EmojiInfo findEmoji(final @NonNull CharSequence candidate) {
         EmojiNode previous = root;
         EmojiNode current = root;
         int i = 0;
@@ -42,11 +41,10 @@ public final class EmojiTree {
     }
 
     public static class EmojiInfo {
-
         private Integer resource;
         private int length;
 
-        EmojiInfo(@Nullable @DrawableRes Integer resource, int length) {
+        EmojiInfo(@Nullable @DrawableRes final Integer resource, final int length) {
             this.resource = resource;
             this.length = length;
         }
@@ -63,16 +61,15 @@ public final class EmojiTree {
     }
 
     private static class EmojiNode {
-
         private SparseArrayCompat<EmojiNode> children = new SparseArrayCompat<>();
         private Integer resource;
 
-        EmojiNode(@Nullable @DrawableRes Integer resource) {
+        EmojiNode(@Nullable @DrawableRes final Integer resource) {
             this.resource = resource;
         }
 
         @Nullable
-        public EmojiNode getChild(char child) {
+        public EmojiNode getChild(final char child) {
             return children.get(child);
         }
 
@@ -82,22 +79,22 @@ public final class EmojiTree {
             return resource;
         }
 
-        public void setResource(@DrawableRes Integer resource) {
+        public void setResource(@DrawableRes final Integer resource) {
             this.resource = resource;
         }
 
         @NonNull
-        public EmojiNode append(char child, @Nullable @DrawableRes Integer resource) {
+        public EmojiNode append(final char child, @Nullable @DrawableRes final Integer newResource) {
             EmojiNode existing = children.get(child);
 
             if (existing == null) {
-                existing = new EmojiNode(resource);
+                existing = new EmojiNode(newResource);
 
                 children.put(child, existing);
             }
 
-            if (resource != null) {
-                existing.setResource(resource);
+            if (newResource != null) {
+                existing.setResource(newResource);
             }
 
             return existing;

@@ -1,5 +1,6 @@
 package com.vanniktech.emoji;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.annotation.ColorInt;
@@ -27,8 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@SuppressLint("ViewConstructor")
 final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeListener {
-
     private static final long INITIAL_INTERVAL = TimeUnit.SECONDS.toMillis(1) / 2;
     private static final int NORMAL_INTERVAL = 50;
 
@@ -101,7 +102,7 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
         this.onEmojiBackspaceClickListener = onEmojiBackspaceClickListener;
     }
 
-    private ImageButton inflateButton(final Context context, @DrawableRes int icon, ViewGroup parent) {
+    private ImageButton inflateButton(final Context context, @DrawableRes final int icon, final ViewGroup parent) {
         final ImageButton button = (ImageButton) LayoutInflater.from(context).inflate(R.layout.emoji_category, parent, false);
 
         button.setImageDrawable(AppCompatResources.getDrawable(context, icon));

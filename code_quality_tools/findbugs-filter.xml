@@ -34,8 +34,8 @@
 
     <!-- We know what the library is doing. -->
     <Match>
-        <Package name="~com\.vanniktech\.emoji\.emoji.*"/>
-        <Bug pattern="MS_MUTABLE_ARRAY"/>
+        <Package name="~com\.vanniktech\.emoji\.emoji\.category.*" />
+        <Bug pattern="EI_EXPOSE_REP" />
     </Match>
 
     <!-- Sample app. -->

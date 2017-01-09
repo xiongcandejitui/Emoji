@@ -9,7 +9,6 @@
   "author": "Ruben Gees",
   "license": "MIT",
   "dependencies": {
-    "collections": "^5.0.6",
     "fs-promise": "^1.0.0",
     "node-xml-lite": "^0.0.7",
     "simple-git": "^1.65.0",

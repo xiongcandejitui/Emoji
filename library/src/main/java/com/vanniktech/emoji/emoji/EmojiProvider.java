@@ -1,12 +1,10 @@
 package com.vanniktech.emoji.emoji;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
-import com.vanniktech.emoji.EmojiTree;
-import com.vanniktech.emoji.EmojiTree.EmojiInfo;
 import com.vanniktech.emoji.R;
+import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
 import com.vanniktech.emoji.emoji.category.ActivityCategory;
 import com.vanniktech.emoji.emoji.category.FlagsCategory;
 import com.vanniktech.emoji.emoji.category.FoodCategory;
@@ -21,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EmojiProvider {
+public final class EmojiProvider {
 
     private static EmojiProvider INSTANCE = new EmojiProvider();
 
@@ -1843,7 +1841,7 @@ public class EmojiProvider {
         return result;
     }
 
-    @Nullable
+    @NonNull
     public EmojiInfo findEmoji(@NonNull CharSequence candiate){
         return emojis.findEmoji(candiate);
     }

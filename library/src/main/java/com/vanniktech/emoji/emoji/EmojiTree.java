@@ -1,13 +1,13 @@
-package com.vanniktech.emoji;
+package com.vanniktech.emoji.emoji;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
+import android.support.v4.util.SparseArrayCompat;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-public class EmojiTree {
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+public final class EmojiTree {
 
     private EmojiNode root = new EmojiNode(null);
 
@@ -19,7 +19,7 @@ public class EmojiTree {
         }
     }
 
-    @Nullable
+    @NonNull
     public EmojiInfo findEmoji(CharSequence candidate) {
         EmojiNode previous = root;
         EmojiNode current = root;
@@ -34,25 +34,26 @@ public class EmojiTree {
             }
         }
 
-        if(current == null){
-            return previous.getResource() == null ? null : new EmojiInfo(previous.getResource(), i);
-        }else{
-            return current.getResource() == null ? null : new EmojiInfo(current.getResource(), i);
+        if (current == null) {
+            return new EmojiInfo(previous.getResource(), i);
+        } else {
+            return new EmojiInfo(current.getResource(), i);
         }
     }
 
     public static class EmojiInfo {
 
-        private int resource;
+        private Integer resource;
         private int length;
 
-        public EmojiInfo(@DrawableRes int resource, int length) {
+        EmojiInfo(@Nullable @DrawableRes Integer resource, int length) {
             this.resource = resource;
             this.length = length;
         }
 
         @DrawableRes
-        public int getResource() {
+        @Nullable
+        public Integer getResource() {
             return resource;
         }
 
@@ -62,10 +63,11 @@ public class EmojiTree {
     }
 
     private static class EmojiNode {
-        private Map<Character, EmojiNode> children = new LinkedHashMap<>();
+
+        private SparseArrayCompat<EmojiNode> children = new SparseArrayCompat<>();
         private Integer resource;
 
-        public EmojiNode(@Nullable @DrawableRes Integer resource) {
+        EmojiNode(@Nullable @DrawableRes Integer resource) {
             this.resource = resource;
         }
 
@@ -80,6 +82,10 @@ public class EmojiTree {
             return resource;
         }
 
+        public void setResource(@DrawableRes Integer resource) {
+            this.resource = resource;
+        }
+
         @NonNull
         public EmojiNode append(char child, @Nullable @DrawableRes Integer resource) {
             EmojiNode existing = children.get(child);
@@ -88,6 +94,10 @@ public class EmojiTree {
                 existing = new EmojiNode(resource);
 
                 children.put(child, existing);
+            }
+
+            if (resource != null) {
+                existing.setResource(resource);
             }
 
             return existing;

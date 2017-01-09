@@ -12,33 +12,7 @@ String.prototype.replaceAll = function (search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement);
 };
 
-async function run() {
-    try {
-        await fs.stat("build/emojione");
-
-        console.log("Existing repo found. Pulling changes...");
-        await git("build/emojione").pull();
-    } catch (ignored) {
-        console.log("Cloning repo...");
-        await git().clone("https://github.com/Ranks/emojione", "build/emojione");
-    }
-
-    console.log("Building mapping...");
-    const emojiMapping = JSON.parse(await fs.readFile("build/emojione/emoji.json", "utf-8"));
-    const map = new Map();
-
-    Object.values(emojiMapping).sort((first, second) => {
-        return first.emoji_order - second.emoji_order;
-    }).forEach(emoji => {
-        if (emoji.category !== "modifier") {
-            if (map.has(emoji.category)) {
-                map.get(emoji.category).push(emoji.unicode);
-            } else if (emoji.category !== "regional") {
-                map.set(emoji.category, new Array(emoji.unicode));
-            }
-        }
-    });
-
+async function convertAndCopyResources(map) {
     console.log("Converting and copying resources...");
     await fs.emptyDir("../library/src/main/res/drawable");
 
@@ -57,7 +31,41 @@ async function run() {
         await convertAndSave("build/emojione/assets/svg/" + file, "../library/src/main/res/drawable/" + "emoji_" +
             path.parse(file).name.replaceAll("-", "_") + ".xml");
     }
+}
 
+async function cloneOrUpdateRepo() {
+    try {
+        await fs.stat("build/emojione");
+
+        console.log("Existing repo found. Pulling changes...");
+        await git("build/emojione").pull();
+    } catch (ignored) {
+        console.log("Cloning repo...");
+        await git().clone("https://github.com/Ranks/emojione", "build/emojione");
+    }
+}
+
+async function buildMapping() {
+    console.log("Building mapping...");
+    const emojiMapping = JSON.parse(await fs.readFile("build/emojione/emoji.json", "utf-8"));
+    const map = new Map();
+
+    Object.values(emojiMapping).sort((first, second) => {
+        return first.emoji_order - second.emoji_order;
+    }).forEach(emoji => {
+        if (emoji.category !== "modifier") {
+            if (map.has(emoji.category)) {
+                map.get(emoji.category).push(emoji.unicode);
+            } else if (emoji.category !== "regional") {
+                map.set(emoji.category, new Array(emoji.unicode));
+            }
+        }
+    });
+
+    return map;
+}
+
+async function generateCode(map) {
     console.log("Generating java code...");
     await fs.emptyDir("../library/src/main/java/com/vanniktech/emoji/emoji/category/");
 
@@ -102,6 +110,14 @@ async function run() {
             categoryMapping: categoryMapping,
             codePointMapping: codePointMapping
         }))
+}
+
+async function run() {
+    await cloneOrUpdateRepo();
+
+    const map = await buildMapping();
+    await convertAndCopyResources(map);
+    await generateCode(map);
 }
 
 async function convertAndSave(from, to) {

@@ -25,6 +25,7 @@ final class EmojiSpan extends DynamicDrawableSpan {
     public Drawable getDrawable() {
         if (drawable == null) {
             drawable = AppCompatResources.getDrawable(context, resourceId);
+            //noinspection ConstantConditions
             drawable.setBounds(0, 0, size, size);
         }
 

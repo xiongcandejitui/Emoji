@@ -3,12 +3,12 @@ package com.vanniktech.emoji;
 import android.content.Context;
 import android.text.Spannable;
 
-import com.vanniktech.emoji.EmojiTree.EmojiInfo;
+import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
 import com.vanniktech.emoji.emoji.EmojiProvider;
 
 final class EmojiHandler {
 
-    public static void addEmojis(final Context context, final Spannable text, final int emojiSize) {
+    static void addEmojis(final Context context, final Spannable text, final int emojiSize) {
         for (EmojiSpan oldSpan : text.getSpans(0, text.length(), EmojiSpan.class)) {
             text.removeSpan(oldSpan);
         }
@@ -18,7 +18,7 @@ final class EmojiHandler {
         while (i < text.length()) {
             EmojiInfo found = EmojiProvider.getInstance().findEmoji(text.subSequence(i, text.length()));
 
-            if (found != null) {
+            if (found.getResource() != null) {
                 text.setSpan(new EmojiSpan(context, found.getResource(), emojiSize), i,
                         i + found.getLength(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 

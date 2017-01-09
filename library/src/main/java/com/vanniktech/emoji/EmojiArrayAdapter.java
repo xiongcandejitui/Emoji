@@ -1,16 +1,22 @@
 package com.vanniktech.emoji;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.util.SparseArrayCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.ImageView;
 
+import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
 import com.vanniktech.emoji.emoji.Emoji;
-import com.vanniktech.emoji.listeners.OnEmojiClickedListener;
+import com.vanniktech.emoji.emoji.EmojiProvider;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,12 +24,9 @@ import java.util.List;
 
 final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
 
-    @Nullable
-    OnEmojiClickedListener onEmojiClickedListener;
-
     @SuppressWarnings("PMD.UseVarargs")
     EmojiArrayAdapter(final Context context, final Emoji[] data) {
-        super(context, R.layout.emoji_text_view, toList(data));
+        super(context, 0, toList(data));
     }
 
     /**
@@ -36,31 +39,39 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
         return list;
     }
 
+    @NonNull
     @Override
-    public View getView(final int position, final View convertView, final ViewGroup parent) {
+    public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
         View view = convertView;
+
         if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.emoji_text_view, parent, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.emoji_item, parent, false);
 
             final ViewHolder holder = new ViewHolder();
-            holder.icon = (TextView) view;
+            holder.icon = (ImageView) view.findViewById(R.id.emoji_image);
             view.setTag(holder);
         }
 
         final Emoji emoji = getItem(position);
         final ViewHolder holder = (ViewHolder) view.getTag();
-        holder.emoji = emoji;
-        holder.icon.setText(emoji.getEmoji());
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (onEmojiClickedListener != null) {
-                    final ViewHolder tag = (ViewHolder) v.getTag();
-                    onEmojiClickedListener.onEmojiClicked(tag.emoji);
-                }
-            }
-        });
+        holder.icon.setImageDrawable(null);
+
+        ImageDownloaderTask task = (ImageDownloaderTask) holder.icon.getTag();
+
+        if (task != null) {
+            task.cancel(true);
+        }
+
+        //noinspection ConstantConditions
+        final EmojiInfo emojiInfo = EmojiProvider.getInstance().findEmoji(emoji.getEmoji());
+
+        if (emojiInfo.getResource() != null) {
+            task = new ImageDownloaderTask(holder.icon);
+            holder.icon.setTag(task);
+
+            task.execute(emojiInfo.getResource());
+        }
 
         return view;
     }
@@ -71,12 +82,50 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
         notifyDataSetChanged();
     }
 
-    public void setOnEmojiClickedListener(@Nullable final OnEmojiClickedListener onEmojiClickedListener) {
-        this.onEmojiClickedListener = onEmojiClickedListener;
+    private static class ViewHolder {
+        ImageView icon;
     }
 
-    static class ViewHolder {
-        Emoji emoji;
-        TextView icon;
+    private static class ImageDownloaderTask extends AsyncTask<Integer, Void, Drawable> {
+
+        private static final SparseArrayCompat<Drawable> cache = new SparseArrayCompat<>();
+
+        private final WeakReference<ImageView> imageViewReference;
+        private final WeakReference<Context> contextReference;
+
+        ImageDownloaderTask(ImageView imageView) {
+            imageViewReference = new WeakReference<>(imageView);
+            contextReference = new WeakReference<>(imageView.getContext());
+        }
+
+        @Override
+        protected Drawable doInBackground(Integer... resource) {
+            final Context context = contextReference.get();
+
+            if (context == null) {
+                return null;
+            } else {
+                Drawable result = cache.get(resource[0]);
+
+                if (result == null) {
+                    result = AppCompatResources.getDrawable(context, resource[0]);
+
+                    cache.put(resource[0], result);
+                }
+
+                return result;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            if (!isCancelled() && drawable != null) {
+                ImageView imageView = imageViewReference.get();
+
+                if (imageView != null) {
+                    imageView.setImageDrawable(drawable);
+                }
+            }
+        }
     }
 }

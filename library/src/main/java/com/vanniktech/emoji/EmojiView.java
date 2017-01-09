@@ -1,6 +1,5 @@
 package com.vanniktech.emoji;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.annotation.ColorInt;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-import com.vanniktech.emoji.emoji.Emoji;
 import com.vanniktech.emoji.emoji.EmojiCategory;
 import com.vanniktech.emoji.emoji.EmojiProvider;
 import com.vanniktech.emoji.listeners.OnEmojiBackspaceClickListener;
@@ -29,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@SuppressLint("ViewConstructor")
 final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeListener {
 
     private static final long INITIAL_INTERVAL = TimeUnit.SECONDS.toMillis(1) / 2;
@@ -57,26 +54,21 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
         setBackgroundColor(ContextCompat.getColor(context, R.color.emoji_background));
 
         themeIconColor = ContextCompat.getColor(context, R.color.emoji_icons);
-
         final TypedValue value = new TypedValue();
         context.getTheme().resolveAttribute(R.attr.colorAccent, value, true);
         themeAccentColor = value.data;
 
         final ViewPager emojisPager = (ViewPager) findViewById(R.id.emojis_pager);
+        final LinearLayout emojisTab = (LinearLayout) findViewById(R.id.emojis_tab);
         emojisPager.addOnPageChangeListener(this);
 
         final List<Pair<String, EmojiCategory>> categories = EmojiProvider.getInstance().getCategories();
 
-        final LinearLayout emojisTab = (LinearLayout) findViewById(R.id.emojis_tab);
-
         emojiTabs = new ImageButton[categories.size() + 2];
-
         emojiTabs[0] = inflateButton(context, R.drawable.emoji_recent, emojisTab);
-
         for (int i = 0; i < categories.size(); i++) {
             emojiTabs[i + 1] = inflateButton(context, categories.get(i).second.getIcon(), emojisTab);
         }
-
         emojiTabs[emojiTabs.length - 1] = inflateButton(context, R.drawable.emoji_backspace, emojisTab);
 
         handleOnClicks(emojisPager);
@@ -122,24 +114,15 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
 
     @NonNull
     private List<? extends View> getViews(final Context context, @Nullable final OnEmojiClickedListener onEmojiClickedListener, @NonNull final RecentEmoji recentEmoji) {
-        recentGridView = new RecentEmojiGridView(context).init(onEmojiClickedListener, recentEmoji);
-
         final List<EmojiGridView> result = new ArrayList<>();
+        recentGridView = new RecentEmojiGridView(context).init(onEmojiClickedListener, recentEmoji);
 
         result.add(recentGridView);
         for (Pair<String, EmojiCategory> category : EmojiProvider.getInstance().getCategories()) {
-            result.add(createGridView(context, category.second.getData(), onEmojiClickedListener));
+            result.add(new EmojiGridView(context).init(onEmojiClickedListener, category.second));
         }
 
         return result;
-    }
-
-    private EmojiGridView createGridView(@NonNull final Context context, final Emoji[] emojis, @Nullable final OnEmojiClickedListener onEmojiClickedListener) {
-        final EmojiGridView emojiGridView = new EmojiGridView(context);
-        final EmojiArrayAdapter emojiArrayAdapter = new EmojiArrayAdapter(getContext(), emojis);
-        emojiArrayAdapter.setOnEmojiClickedListener(onEmojiClickedListener);
-        emojiGridView.setAdapter(emojiArrayAdapter);
-        return emojiGridView;
     }
 
     @Override

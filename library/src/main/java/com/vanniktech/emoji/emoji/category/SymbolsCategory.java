@@ -294,6 +294,6 @@ public class SymbolsCategory implements EmojiCategory {
     @Override
     @DrawableRes
     public int getIcon() {
-        return R.drawable.emoji_cars;
+        return R.drawable.emoji_category_symbols;
     }
 }

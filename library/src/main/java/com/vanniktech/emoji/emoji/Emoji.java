@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public final class Emoji implements Serializable {
     private static final long serialVersionUID = 1L;
+
     @NonNull
     private final String emoji;
 

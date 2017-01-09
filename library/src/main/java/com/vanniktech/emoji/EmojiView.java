@@ -10,15 +10,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.vanniktech.emoji.emoji.Emoji;
-import com.vanniktech.emoji.emoji.EmojiCategories;
 import com.vanniktech.emoji.emoji.EmojiCategory;
+import com.vanniktech.emoji.emoji.EmojiProvider;
 import com.vanniktech.emoji.listeners.OnEmojiBackspaceClickListener;
 import com.vanniktech.emoji.listeners.OnEmojiClickedListener;
 import com.vanniktech.emoji.listeners.RepeatListener;
@@ -33,12 +35,15 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
     private static final long INITIAL_INTERVAL = TimeUnit.SECONDS.toMillis(1) / 2;
     private static final int NORMAL_INTERVAL = 50;
 
-    @ColorInt private final int themeAccentColor;
-    @ColorInt private final int themeIconColor;
+    @ColorInt
+    private final int themeAccentColor;
+    @ColorInt
+    private final int themeIconColor;
 
     private final ImageButton[] emojiTabs;
 
-    @Nullable OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+    @Nullable
+    OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
 
     private int emojiTabLastSelectedIndex = -1;
     private RecentEmojiGridView recentGridView;
@@ -60,22 +65,19 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
         final ViewPager emojisPager = (ViewPager) findViewById(R.id.emojis_pager);
         emojisPager.addOnPageChangeListener(this);
 
-        final List<Pair<String, EmojiCategory>> categories = EmojiCategories.getCategories();
+        final List<Pair<String, EmojiCategory>> categories = EmojiProvider.getInstance().getCategories();
+
+        final LinearLayout emojisTab = (LinearLayout) findViewById(R.id.emojis_tab);
 
         emojiTabs = new ImageButton[categories.size() + 2];
 
+        emojiTabs[0] = inflateButton(context, R.drawable.emoji_recent, emojisTab);
+
         for (int i = 0; i < categories.size(); i++) {
-            emojiTabs[i + 1] = inflateButton(context, categories.get(i).second.getIcon());
+            emojiTabs[i + 1] = inflateButton(context, categories.get(i).second.getIcon(), emojisTab);
         }
 
-        emojiTabs[0] = inflateButton(context, R.drawable.emoji_recent);
-        emojiTabs[emojiTabs.length - 1] = inflateButton(context, R.drawable.emoji_backspace_back_normal);
-
-        final ViewGroup emojisTab = (ViewGroup) findViewById(R.id.emojis_tab);
-
-        for (ImageButton emojiTab : emojiTabs) {
-            emojisTab.addView(emojiTab);
-        }
+        emojiTabs[emojiTabs.length - 1] = inflateButton(context, R.drawable.emoji_backspace, emojisTab);
 
         handleOnClicks(emojisPager);
 
@@ -107,11 +109,13 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
         this.onEmojiBackspaceClickListener = onEmojiBackspaceClickListener;
     }
 
-    private ImageButton inflateButton(final Context context, @DrawableRes int icon) {
-        final ImageButton button = (ImageButton) View.inflate(context, R.layout.emoji_category, null);
+    private ImageButton inflateButton(final Context context, @DrawableRes int icon, ViewGroup parent) {
+        final ImageButton button = (ImageButton) LayoutInflater.from(context).inflate(R.layout.emoji_category, parent, false);
 
-        button.setImageDrawable(ContextCompat.getDrawable(context, icon));
+        button.setImageDrawable(AppCompatResources.getDrawable(context, icon));
         button.setColorFilter(themeIconColor, PorterDuff.Mode.SRC_IN);
+
+        parent.addView(button);
 
         return button;
     }
@@ -123,7 +127,7 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
         final List<EmojiGridView> result = new ArrayList<>();
 
         result.add(recentGridView);
-        for (Pair<String, EmojiCategory> category : EmojiCategories.getCategories()) {
+        for (Pair<String, EmojiCategory> category : EmojiProvider.getInstance().getCategories()) {
             result.add(createGridView(context, category.second.getData(), onEmojiClickedListener));
         }
 

@@ -9,19 +9,19 @@ public class EmojiTest {
     @Test
     public void fromCodePoint() {
         final Emoji emoji = Emoji.fromCodePoints(0x1f600);
-        assertThat(emoji.getEmoji()).isEqualTo("😀");
+        assertThat(emoji.getUnicode()).isEqualTo("😀");
     }
 
     @Test
     public void fromChar() {
         final Emoji emoji = Emoji.fromChar((char) 0x2708);
-        assertThat(emoji.getEmoji()).isEqualTo("✈");
+        assertThat(emoji.getUnicode()).isEqualTo("✈");
     }
 
     @Test
     public void getEmoji() {
         final Emoji emoji = new Emoji("emoji");
-        assertThat(emoji.getEmoji()).isEqualTo("emoji");
+        assertThat(emoji.getUnicode()).isEqualTo("emoji");
     }
 
     @Test

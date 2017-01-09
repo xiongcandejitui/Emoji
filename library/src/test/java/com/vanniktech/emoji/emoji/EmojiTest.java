@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings("checkstyle:magicnumber")
+
 public class EmojiTest {
     @Test
     public void fromCodePoint() {

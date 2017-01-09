@@ -26,10 +26,6 @@ public final class EmojiProvider {
     private LinkedHashMap<String, EmojiCategory> categories = new LinkedHashMap<>();
     private EmojiTree emojis = new EmojiTree();
 
-    public static EmojiProvider getInstance() {
-        return INSTANCE;
-    }
-
     private EmojiProvider() {
         categories.put("people", new PeopleCategory());
         categories.put("objects", new ObjectsCategory());
@@ -1829,6 +1825,10 @@ public final class EmojiProvider {
         emojis.add(new String(new int[]{0x1f1ff, 0x1f1e6}, 0, 2), R.drawable.emoji_1f1ff_1f1e6);
         emojis.add(new String(new int[]{0x1f1ff, 0x1f1f2}, 0, 2), R.drawable.emoji_1f1ff_1f1f2);
         emojis.add(new String(new int[]{0x1f1ff, 0x1f1fc}, 0, 2), R.drawable.emoji_1f1ff_1f1fc);
+    }
+
+    public static EmojiProvider getInstance() {
+        return INSTANCE;
     }
 
     public List<Pair<String, EmojiCategory>> getCategories() {

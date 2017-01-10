@@ -23,8 +23,8 @@ import java.util.Map;
 public final class EmojiProvider {
     private static final EmojiProvider INSTANCE = new EmojiProvider();
 
-    private LinkedHashMap<String, EmojiCategory> categories = new LinkedHashMap<>();
-    private EmojiTree emojis = new EmojiTree();
+    private final Map<String, EmojiCategory> categories = new LinkedHashMap<>();
+    private final EmojiTree emojis = new EmojiTree();
 
     public static EmojiProvider getInstance() {
         return INSTANCE;
@@ -1834,7 +1834,7 @@ public final class EmojiProvider {
     public List<Pair<String, EmojiCategory>> getCategories() {
         final List<Pair<String, EmojiCategory>> result = new ArrayList<>();
 
-        for (Map.Entry<String, EmojiCategory> entry : categories.entrySet()) {
+        for (final Map.Entry<String, EmojiCategory> entry : categories.entrySet()) {
             result.add(new Pair<>(entry.getKey(), entry.getValue()));
         }
 

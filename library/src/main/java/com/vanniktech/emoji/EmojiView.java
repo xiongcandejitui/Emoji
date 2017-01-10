@@ -116,7 +116,7 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
         recentGridView = new RecentEmojiGridView(context).init(onEmojiClickedListener, recentEmoji);
 
         result.add(recentGridView);
-        for (Pair<String, EmojiCategory> category : EmojiProvider.getInstance().getCategories()) {
+        for (final Pair<String, EmojiCategory> category : EmojiProvider.getInstance().getCategories()) {
             result.add(new EmojiGridView(context).init(onEmojiClickedListener, category.second));
         }
 

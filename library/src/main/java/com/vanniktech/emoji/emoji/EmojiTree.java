@@ -8,7 +8,7 @@ import android.support.v4.util.SparseArrayCompat;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public final class EmojiTree {
-    private EmojiNode root = new EmojiNode(null);
+    private final EmojiNode root = new EmojiNode(null);
 
     public void add(@NonNull final String unicode, @DrawableRes final int resource) {
         EmojiNode current = root;
@@ -41,8 +41,8 @@ public final class EmojiTree {
     }
 
     public static class EmojiInfo {
-        private Integer resource;
-        private int length;
+        private final Integer resource;
+        private final int length;
 
         EmojiInfo(@Nullable @DrawableRes final Integer resource, final int length) {
             this.resource = resource;
@@ -61,7 +61,7 @@ public final class EmojiTree {
     }
 
     private static class EmojiNode {
-        private SparseArrayCompat<EmojiNode> children = new SparseArrayCompat<>();
+        private final SparseArrayCompat<EmojiNode> children = new SparseArrayCompat<>();
         private Integer resource;
 
         EmojiNode(@Nullable @DrawableRes final Integer resource) {

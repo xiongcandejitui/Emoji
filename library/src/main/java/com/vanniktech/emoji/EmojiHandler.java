@@ -8,7 +8,7 @@ import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
 
 final class EmojiHandler {
     static void addEmojis(final Context context, final Spannable text, final int emojiSize) {
-        for (EmojiSpan oldSpan : text.getSpans(0, text.length(), EmojiSpan.class)) {
+        for (final EmojiSpan oldSpan : text.getSpans(0, text.length(), EmojiSpan.class)) {
             text.removeSpan(oldSpan);
         }
 

@@ -38,7 +38,8 @@
             android:layout_weight="1"
             android:imeOptions="actionSend"
             android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="3"/>
+            android:maxLines="3"
+            app:emojiSize="26sp"/>
 
         <ImageView
             android:id="@+id/main_activity_send"

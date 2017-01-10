@@ -5,14 +5,14 @@ import android.support.v4.util.Pair;
 
 import com.vanniktech.emoji.R;
 import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
-import com.vanniktech.emoji.emoji.category.ActivityCategory;
-import com.vanniktech.emoji.emoji.category.FlagsCategory;
-import com.vanniktech.emoji.emoji.category.FoodCategory;
-import com.vanniktech.emoji.emoji.category.NatureCategory;
-import com.vanniktech.emoji.emoji.category.ObjectsCategory;
 import com.vanniktech.emoji.emoji.category.PeopleCategory;
-import com.vanniktech.emoji.emoji.category.SymbolsCategory;
+import com.vanniktech.emoji.emoji.category.ObjectsCategory;
+import com.vanniktech.emoji.emoji.category.ActivityCategory;
+import com.vanniktech.emoji.emoji.category.NatureCategory;
 import com.vanniktech.emoji.emoji.category.TravelCategory;
+import com.vanniktech.emoji.emoji.category.SymbolsCategory;
+import com.vanniktech.emoji.emoji.category.FoodCategory;
+import com.vanniktech.emoji.emoji.category.FlagsCategory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,6 +25,10 @@ public final class EmojiProvider {
 
     private LinkedHashMap<String, EmojiCategory> categories = new LinkedHashMap<>();
     private EmojiTree emojis = new EmojiTree();
+
+    public static EmojiProvider getInstance() {
+        return INSTANCE;
+    }
 
     private EmojiProvider() {
         categories.put("people", new PeopleCategory());
@@ -1825,10 +1829,6 @@ public final class EmojiProvider {
         emojis.add(new String(new int[]{0x1f1ff, 0x1f1e6}, 0, 2), R.drawable.emoji_1f1ff_1f1e6);
         emojis.add(new String(new int[]{0x1f1ff, 0x1f1f2}, 0, 2), R.drawable.emoji_1f1ff_1f1f2);
         emojis.add(new String(new int[]{0x1f1ff, 0x1f1fc}, 0, 2), R.drawable.emoji_1f1ff_1f1fc);
-    }
-
-    public static EmojiProvider getInstance() {
-        return INSTANCE;
     }
 
     public List<Pair<String, EmojiCategory>> getCategories() {

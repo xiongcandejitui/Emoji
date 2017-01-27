@@ -54,7 +54,7 @@ android {
 }
 
 dependencies {
-    compile project(':library')
+    compile project(':emoji')
 
     compile rootProject.ext.supportAppCompat
     compile rootProject.ext.supportRecyclerView

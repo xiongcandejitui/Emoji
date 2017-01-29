@@ -60,6 +60,7 @@ async function parseAndCopyImages(targets) {
     console.log("Parsing files and extracting images...");
 
     for (const target of targets) {
+        await fs.emptyDir(`../emoji-${target.package}/src/main/res/drawable`);
         await fs.emptyDir(`../emoji-${target.package}/src/main/res/drawable-nodpi`);
     }
 
@@ -100,8 +101,8 @@ async function parseAndCopyImages(targets) {
                 map.set(category, new Array(emoji));
 
                 for (const target of targets) {
-                    await fs.copy(`img/${category.toLowerCase()}.png`,
-                        `../emoji-${target.package}/src/main/res/drawable-nodpi/emoji_category_${category.toLowerCase()}.png`);
+                    await fs.copy(`img/${category.toLowerCase()}.xml`,
+                        `../emoji-${target.package}/src/main/res/drawable/emoji_category_${category.toLowerCase()}.xml`);
                 }
             }
         }

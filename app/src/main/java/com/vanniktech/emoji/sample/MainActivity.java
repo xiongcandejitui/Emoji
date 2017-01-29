@@ -1,6 +1,8 @@
 package com.vanniktech.emoji.sample;
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
         editText = (EmojiEditText) findViewById(R.id.main_activity_chat_bottom_message_edittext);
         rootView = (ViewGroup) findViewById(R.id.main_activity_root_view);
         emojiButton = (ImageView) findViewById(R.id.main_activity_emoji);
+        final ImageView sendButton = (ImageView) findViewById(R.id.main_activity_send);
+
+        emojiButton.setColorFilter(ContextCompat.getColor(this, R.color.emoji_icons), PorterDuff.Mode.SRC_IN);
+        sendButton.setColorFilter(ContextCompat.getColor(this, R.color.emoji_icons), PorterDuff.Mode.SRC_IN);
 
         emojiButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 emojiPopup.toggle();
             }
         });
-
-        findViewById(R.id.main_activity_send).setOnClickListener(new View.OnClickListener() {
+        sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 final String text = editText.getText().toString().trim();

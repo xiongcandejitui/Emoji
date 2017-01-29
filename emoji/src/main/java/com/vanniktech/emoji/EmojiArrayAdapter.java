@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.vanniktech.emoji.emoji.Emoji;
+import com.vanniktech.emoji.listeners.OnEmojiClickedListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -20,9 +22,15 @@ import java.util.Collections;
 import java.util.List;
 
 final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
+    @Nullable
+    final private OnEmojiClickedListener listener;
+
     @SuppressWarnings("PMD.UseVarargs")
-    EmojiArrayAdapter(final Context context, final Emoji[] emojis) {
+    EmojiArrayAdapter(@NonNull final Context context, @NonNull final Emoji[] emojis,
+                      @Nullable OnEmojiClickedListener listener) {
         super(context, 0, toList(emojis));
+
+        this.listener = listener;
     }
 
     /**
@@ -46,6 +54,14 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
         }
 
         image.setImageDrawable(null);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onEmojiClicked(getItem(position));
+                }
+            }
+        });
 
         final Emoji emoji = getItem(position);
         ImageDownloaderTask task = (ImageDownloaderTask) image.getTag();

@@ -3,8 +3,7 @@ package com.vanniktech.emoji;
 import android.content.Context;
 import android.text.Spannable;
 
-import com.vanniktech.emoji.emoji.EmojiProvider;
-import com.vanniktech.emoji.emoji.EmojiTree.EmojiInfo;
+import com.vanniktech.emoji.emoji.Emoji;
 
 final class EmojiHandler {
     private EmojiHandler() {
@@ -19,9 +18,9 @@ final class EmojiHandler {
         int i = 0;
 
         while (i < text.length()) {
-            final EmojiInfo found = EmojiProvider.getInstance().findEmoji(text.subSequence(i, text.length()));
+            final Emoji found = EmojiManager.getInstance().findEmoji(text.subSequence(i, text.length()));
 
-            if (found.getResource() != null) {
+            if (found != null) {
                 text.setSpan(new EmojiSpan(context, found.getResource(), emojiSize), i,
                         i + found.getLength(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 

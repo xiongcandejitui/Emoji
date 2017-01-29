@@ -1,6 +1,5 @@
 package com.vanniktech.emoji.emoji;
 
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
@@ -10,94 +9,86 @@ import android.support.v4.util.SparseArrayCompat;
 public final class EmojiTree {
     private final EmojiNode root = new EmojiNode(null);
 
-    public void add(@NonNull final String unicode, @DrawableRes final int resource) {
+    public void add(@NonNull Emoji emoji) {
+        final String unicode = emoji.getUnicode();
+
         EmojiNode current = root;
 
-        for (int i = 0; i < unicode.length(); i++) {
-            current = current.append(unicode.charAt(i), i == unicode.length() - 1 ? resource : null);
+        for (int i = 0; i < unicode.length() - 1; i++) {
+            current = current.appendOrGet(unicode.charAt(i));
         }
+
+        current.appendLast(unicode.charAt(unicode.length() - 1), emoji);
     }
 
-    @NonNull
-    public EmojiInfo findEmoji(final @NonNull CharSequence candidate) {
-        EmojiNode previous = root;
+    @Nullable
+    public Emoji findEmoji(@NonNull final CharSequence candidate) {
         EmojiNode current = root;
+        Emoji result = null;
         int i = 0;
 
         for (; i < candidate.length(); i++) {
-            previous = current;
             current = current.getChild(candidate.charAt(i));
 
             if (current == null) {
                 break;
+            } else if (current.getEmoji() != null) {
+                result = current.getEmoji();
             }
         }
 
-        if (current == null) {
-            return new EmojiInfo(previous.getResource(), i);
-        } else {
-            return new EmojiInfo(current.getResource(), i);
-        }
+        return result;
     }
 
-    public static class EmojiInfo {
-        private final Integer resource;
-        private final int length;
-
-        EmojiInfo(@Nullable @DrawableRes final Integer resource, final int length) {
-            this.resource = resource;
-            this.length = length;
-        }
-
-        @DrawableRes
-        @Nullable
-        public Integer getResource() {
-            return resource;
-        }
-
-        public int getLength() {
-            return length;
-        }
+    public boolean isEmpty() {
+        return root.children.size() <= 0;
     }
 
     private static class EmojiNode {
         private final SparseArrayCompat<EmojiNode> children = new SparseArrayCompat<>();
-        private Integer resource;
+        private Emoji emoji;
 
-        EmojiNode(@Nullable @DrawableRes final Integer resource) {
-            this.resource = resource;
+        EmojiNode(@Nullable final Emoji emoji) {
+            this.emoji = emoji;
         }
 
         @Nullable
-        public EmojiNode getChild(final char child) {
+        EmojiNode getChild(final char child) {
             return children.get(child);
         }
 
         @Nullable
-        @DrawableRes
-        public Integer getResource() {
-            return resource;
+        Emoji getEmoji() {
+            return emoji;
         }
 
-        public void setResource(@DrawableRes final Integer resource) {
-            this.resource = resource;
+        void setEmoji(@NonNull final Emoji emoji) {
+            this.emoji = emoji;
         }
 
         @NonNull
-        public EmojiNode append(final char child, @Nullable @DrawableRes final Integer newResource) {
+        EmojiNode appendOrGet(final char child) {
             EmojiNode existing = children.get(child);
 
             if (existing == null) {
-                existing = new EmojiNode(newResource);
+                existing = new EmojiNode(null);
 
                 children.put(child, existing);
             }
 
-            if (newResource != null) {
-                existing.setResource(newResource);
-            }
-
             return existing;
+        }
+
+        void appendLast(final char child, @NonNull Emoji emoji) {
+            EmojiNode existing = children.get(child);
+
+            if (existing == null) {
+                existing = new EmojiNode(emoji);
+
+                children.put(child, existing);
+            } else {
+                existing.setEmoji(emoji);
+            }
         }
     }
 }

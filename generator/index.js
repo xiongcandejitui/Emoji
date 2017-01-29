@@ -1,168 +1,186 @@
 const fs = require("fs-promise");
-const git = require("simple-git");
-const svgConverter = require("./svg2vectordrawable");
+const cheerio = require("cheerio");
 const _ = require("underscore");
-
-String.prototype.capitalizeFirstLetter = function () {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
-String.prototype.replaceAll = function (search, replacement) {
-    return this.replace(new RegExp(search, 'g'), replacement);
-};
+const download = require("download");
 
 /**
- * Clones the EmojiOne GitHub repo or pulls the latest changes, if already existing in the /build folder.
+ * The targets for generating. Extend these for adding more emoji variants.
+ * @type {[*]} An array of target-objects.
+ */
+const targets = [{
+    package: "ios",
+    name: "IOSEmoji",
+    imagePosition: 4
+}, {
+    package: "one",
+    name: "EmojiOne",
+    imagePosition: 7
+}];
+
+/**
+ * Downloads a single file and shows progress on the console.
+ * @param url The file to download.
+ * @param dest The destination.
  * @returns {Promise.<void>} Empty Promise.
  */
-async function cloneOrUpdateRepo() {
-    try {
-        await fs.stat("build/emojione");
+async function downloadFile(url, dest) {
+    await download(url, dest)
+        .on('response', res => {
+            let current = 0;
 
-        console.log("Existing repo found. Pulling changes...");
-        await git("build/emojione").pull();
-    } catch (ignored) {
-        console.log("Cloning repo...");
-        await git().clone("https://github.com/Ranks/emojione", "build/emojione");
-    }
+            res.on('data', data => {
+                current += data.length;
+
+                process.stdout.write("\r" + parseFloat(current / 1024 / 1024).toFixed(2) + "MB")
+            });
+        });
+
+    console.log("");
 }
 
 /**
- * Generates the category -> emoji unicode mapping.
- * @returns {Promise.<Map>} Promise returning the Map.
+ * Downloads the required files.
+ * @returns {Promise.<void>} Empty promise.
  */
-async function buildMapping() {
-    console.log("Building mapping...");
-    const emojiMapping = JSON.parse(await fs.readFile("build/emojione/emoji.json", "utf-8"));
-    const map = new Map();
+async function downloadFiles() {
+    console.log("Downloading files...");
 
-    Object.values(emojiMapping).sort((first, second) => {
-        return first.emoji_order - second.emoji_order;
-    }).forEach(emoji => {
-        // Ignore the modifier category as we don't want to expose it to the user (Contains the
-        // skin color modifiers). Moreover ignore the regional category as this is a special
-        // category only used by Emojione.
-        if (emoji.category !== "modifier" && emoji.category !== "regional") {
-            if (map.has(emoji.category)) {
-                map.get(emoji.category).push(emoji.unicode);
-            } else if (emoji.category !== "regional") {
-                map.set(emoji.category, new Array(emoji.unicode));
+    await fs.emptyDir("build");
+    await downloadFile("http://unicode.org/emoji/charts/full-emoji-list.html", "build");
+    await downloadFile("https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json", "build");
+}
+
+/**
+ * Parses the files, creates a map of categories to emojis and copies the images (including the category images) to the
+ * destinations, specified by the passed targets.
+ * @param targets The targets, providing the destination for copying.
+ * @returns {Promise.<Map>} Promise returning the map.
+ */
+async function parseAndCopyImages(targets) {
+    console.log("Parsing files and extracting images...");
+
+    for (const target of targets) {
+        await fs.emptyDir(`../emoji-${target.package}/src/main/res/drawable`);
+    }
+
+    const map = new Map();
+    const $ = cheerio.load(await fs.readFile("build/full-emoji-list.html"));
+    const emojiInfo = JSON.parse(await fs.readFile("build/emoji.json"));
+
+    const rows = $("tr").get()
+        .map(it => it.children.filter(it => it.name === "td"))
+        .filter(it => it.length === 19 && it[1].attribs.class === "code");
+
+    for (const row of rows) {
+        const code = row[1].children[0].attribs.name;
+        const description = row[16].children[0].data;
+        const foundInfo = emojiInfo.find(it => it.description === (description.includes("skin tone") ?
+            description.substring(0, description.indexOf(":")) : description));
+        const category = foundInfo ? foundInfo.category : null;
+
+        if (category) {
+            const emoji = {
+                unicode: code
+            };
+
+            for (const target of targets) {
+                const image = row[target.imagePosition].children[0].name === "img" ?
+                    row[target.imagePosition].children[0].attribs.src.replace(/^data:image\/png;base64,/, "") : null;
+
+                if (image) {
+                    await fs.writeFile(`../emoji-${target.package}/src/main/res/drawable/emoji_${code}.png`, image, "base64");
+
+                    emoji[target.package] = true;
+                }
+            }
+
+            if (map.has(category)) {
+                map.get(category).push(emoji);
+            } else {
+                map.set(category, new Array(emoji));
+
+                for (const target of targets) {
+                    await fs.copy(`img/${category.toLowerCase()}.png`,
+                        `../emoji-${target.package}/src/main/res/drawable/emoji_category_${category.toLowerCase()}.png`);
+                }
             }
         }
-    });
+    }
 
     return map;
 }
 
 /**
- * Converts the emoji images to Android vectors and copies them to the /drawable directory. Moreover a recent and
- * backspace icon are generated and copied.
- * @param map The map, previously created.
+ * Generates the relevant java code and saves it to the destinations, specified by the targets. Code generated are the
+ * categories and the provider.
+ * @param map The previously created map.
+ * @param targets The targets, providing destination for the code files.
  * @returns {Promise.<void>} Empty Promise.
  */
-async function convertAndCopyResources(map) {
-    console.log("Converting and copying resources...");
-    await fs.emptyDir("../library/src/main/res/drawable");
-
-    for (const category of Array.from(map.keys())) {
-        // The icon for the food category is incorrectly named "foods", so we need to manually
-        // check for that.
-        const copyFrom = "build/emojione/assets/other/category_icons/" + (category === "food" ?
-                "foods.svg" : category + ".svg");
-
-        await convertAndSave(copyFrom, "../library/src/main/res/drawable/" + "emoji_category_" + category + ".xml");
-
-        for (const emoji of map.get(category)) {
-            await convertAndSave("build/emojione/assets/svg/" + emoji + ".svg",
-                "../library/src/main/res/drawable/emoji_" + emoji.replaceAll("-", "_") + ".xml");
-        }
-    }
-
-    // We use the provided recent icon and our own backspace icon (generated by the Android Studio
-    // Asset Studio).
-    await convertAndSave("build/emojione/assets/other/category_icons/recent.svg",
-        "../library/src/main/res/drawable/emoji_recent.xml");
-    await fs.copy("emoji_backspace.xml", "../library/src/main/res/drawable/emoji_backspace.xml");
-}
-
-/**
- * Generates Java code for the categories and for the EmojiProvider.
- * @param map The map, previously created.
- * @returns {Promise.<void>} Empty Promise.
- */
-async function generateCode(map) {
+async function generateCode(map, targets) {
     console.log("Generating java code...");
-    await fs.emptyDir("../library/src/main/java/com/vanniktech/emoji/emoji/category/");
 
-    const categoryTemplate = await fs.readFile("Category.java", "utf-8");
-    const emojiProviderTemplate = await fs.readFile("EmojiProvider.java", "utf-8");
+    const categoryTemplate = await fs.readFile("template/Category.java", "utf-8");
+    const emojiProviderTemplate = await fs.readFile("template/EmojiProvider.java", "utf-8");
 
-    for (const [category, unicodes] of map.entries()) {
-        const name = category.capitalizeFirstLetter() + "Category";
-        const data = unicodes.map((it) => {
-            return "Emoji.fromCodePoints(" + it.split("-").map(unicode => "0x" + unicode).join(", ") + ")";
-        }).join(",\n            ");
+    for (const target of targets) {
+        const dir = `../emoji-${target.package}/src/main/java/com/vanniktech/emoji/${target.package}/category/`;
 
-        await fs.writeFile("../library/src/main/java/com/vanniktech/emoji/emoji/category/" + name + ".java",
-            _(categoryTemplate).template()({
-                name: name,
-                data: data,
-                icon: category
-            }));
-    }
+        await fs.emptyDir(dir);
 
-    const imports = [...map.keys()].map((category) => {
-        return "import com.vanniktech.emoji.emoji.category." + category.capitalizeFirstLetter() + "Category;"
-    }).join("\n");
+        for (const [category, emojis] of map.entries()) {
+            const data = emojis.filter(it => it[target.package]).map(it => it.unicode).map((it) => {
+                const unicodeParts = it.split("_");
 
-    const categoryMapping = [...map.keys()].map((category) => {
-        return "categories.put(\"" + category + "\", new " + category.capitalizeFirstLetter() + "Category());"
-    }).join("\n        ");
+                return `new Emoji(new String(new int[]\{${unicodeParts.map(it => "0x" + it).join(", ")}}, 0, ${unicodeParts.length}), R.drawable.emoji_${it})`;
+            }).join(",\n            ");
 
-    const codePointMapping = [...map.values()].map((it) => {
-        return it.map((unicodes) => {
-            const unicodesSplit = unicodes.split("-");
+            await fs.writeFile(`${dir + category}Category.java`,
+                _(categoryTemplate).template()({
+                    package: target.package,
+                    name: category,
+                    data: data,
+                    icon: category.toLowerCase()
+                }));
+        }
 
-            return "emojis.add(new String(new int[]{" + unicodesSplit.map((unicode) => "0x" + unicode).join(", ") +
-                "}, 0, " + unicodesSplit.length + "), R.drawable.emoji_"
-                + unicodesSplit.join("_") + ");"
+        const imports = [...map.keys()].map((category) => {
+            return `import com.vanniktech.emoji.${target.package}.category.${category}Category;`
+        }).join("\n");
+
+        const categoryMapping = [...map.keys()].map((category) => {
+            return `result.put("${category}", new ${category}Category());`
         }).join("\n        ");
-    }).join("\n        ");
 
-    await fs.writeFile("../library/src/main/java/com/vanniktech/emoji/emoji/EmojiProvider.java",
-        _(emojiProviderTemplate).template()({
+        await fs.writeFile(`../emoji-${target.package}/src/main/java/com/vanniktech/emoji/${target.package}/${target.name}Provider.java`, _(emojiProviderTemplate).template()({
+            package: target.package,
             imports: imports,
-            categoryMapping: categoryMapping,
-            codePointMapping: codePointMapping
-        }))
-}
-
-/**
- * Converts an image to an Android vector and saves it to the specified location.
- * @param from Path of the file to convert.
- * @param to Destination of the newly converted file.
- * @returns {Promise.<void>} Empty Promise.
- */
-async function convertAndSave(from, to) {
-    const svg = await fs.readFile(from, "utf-8");
-    const vector = await svgConverter.svg2vectorDrawableContent(svg);
-
-    await fs.writeFile(to, vector);
+            name: target.name,
+            categoryMapping: categoryMapping
+        }));
+    }
 }
 
 /**
  * Runs the script.
+ * This is separated into three parts:
+ * - Downloading the necessary files.
+ * - Parsing the files and copying the images into the respective directories.
+ * - Generating the java code and copying it into the respective directories.
+ * If the no-download command line option is passed, the download step is skipped. In that case the presence of the
+ * relevant files is assumed.
  * @returns {Promise.<void>} Empty Promise.
  */
 async function run() {
-    await cloneOrUpdateRepo();
+    if (!(process.argv.length >= 3 && process.argv.includes("-no-download"))) {
+        await downloadFiles();
+    }
 
-    const map = await buildMapping();
-    await convertAndCopyResources(map);
-    await generateCode(map);
+    const map = await parseAndCopyImages(targets);
+    await generateCode(map, targets);
 }
 
 run().then()
     .catch(err => {
-        console.log(err);
+        console.error(err);
     });

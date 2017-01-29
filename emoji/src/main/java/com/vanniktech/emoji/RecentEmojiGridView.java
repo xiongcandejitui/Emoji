@@ -40,8 +40,4 @@ final class RecentEmojiGridView extends EmojiGridView {
     public void invalidateEmojis() {
         emojiArrayAdapter.updateEmojis(recentEmojis.getRecentEmojis());
     }
-
-    public int numberOfRecentEmojis() {
-        return emojiArrayAdapter.getCount();
-    }
 }

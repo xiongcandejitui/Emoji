@@ -1,47 +1,53 @@
 package com.vanniktech.emoji.emoji;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
 public final class Emoji implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
-    @NonNull private final String emoji;
+    @NonNull
+    private final String unicode;
+    @DrawableRes
+    private final int resource;
 
-    public Emoji(@NonNull final String emoji) {
-        this.emoji = emoji;
-    }
-
-    public static Emoji fromCodePoints(final int... codePoints) {
-        return new Emoji(new String(codePoints, 0, codePoints.length));
-    }
-
-    public static Emoji fromChar(final char ch) {
-        return new Emoji(Character.toString(ch));
+    public Emoji(@NonNull final String unicode, @DrawableRes final int resource) {
+        this.unicode = unicode;
+        this.resource = resource;
     }
 
     @NonNull
-    public String getEmoji() {
-        return emoji;
+    public String getUnicode() {
+        return unicode;
     }
 
+    @DrawableRes
+    public int getResource() {
+        return resource;
+    }
+
+    public int getLength() {
+        return unicode.length();
+    }
+
+    @SuppressWarnings("SimplifiableIfStatement")
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        Emoji emoji = (Emoji) o;
 
-        final Emoji e = (Emoji) o;
-        return emoji.equals(e.emoji);
+        if (resource != emoji.resource) return false;
+        return unicode.equals(emoji.unicode);
     }
 
     @Override
     public int hashCode() {
-        return emoji.hashCode();
+        int result = unicode.hashCode();
+        result = 31 * result + resource;
+        return result;
     }
 }

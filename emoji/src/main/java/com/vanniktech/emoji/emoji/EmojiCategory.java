@@ -1,9 +1,11 @@
 package com.vanniktech.emoji.emoji;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 
 public interface EmojiCategory {
-    Emoji[] getData();
+    @NonNull
+    Emoji[] getEmojis();
 
     @DrawableRes
     int getIcon();

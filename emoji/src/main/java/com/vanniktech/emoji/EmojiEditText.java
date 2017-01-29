@@ -62,9 +62,9 @@ public class EmojiEditText extends AppCompatEditText {
             final int start = getSelectionStart();
             final int end = getSelectionEnd();
             if (start < 0) {
-                append(emoji.getEmoji());
+                append(emoji.getUnicode());
             } else {
-                getText().replace(Math.min(start, end), Math.max(start, end), emoji.getEmoji(), 0, emoji.getEmoji().length());
+                getText().replace(Math.min(start, end), Math.max(start, end), emoji.getUnicode(), 0, emoji.getUnicode().length());
             }
         }
     }

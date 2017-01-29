@@ -27,8 +27,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="center"
-            app:srcCompat="@drawable/emoji_category_people"
+            android:padding="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/emoji_category_people"
             tools:ignore="ContentDescription"/>
 
         <com.vanniktech.emoji.EmojiEditText
@@ -46,8 +47,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="center"
-            android:src="@drawable/ic_send_black_18dp"
+            android:padding="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_send"
             tools:ignore="ContentDescription"/>
     </LinearLayout>
 </RelativeLayout>

@@ -45,10 +45,13 @@ final class RecentEmojiManager implements RecentEmoji {
                     final String[] parts = token.split(TIME_DELIMITER);
 
                     if (parts.length == 2) {
-                        final Emoji emoji = new Emoji(parts[0]);
-                        final long timestamp = Long.parseLong(parts[1]);
+                        final Emoji emoji = EmojiManager.getInstance().findEmoji(parts[0]);
 
-                        emojiList.add(emoji, timestamp);
+                        if (emoji != null && emoji.getLength() == parts[0].length()) {
+                            final long timestamp = Long.parseLong(parts[1]);
+
+                            emojiList.add(emoji, timestamp);
+                        }
                     }
                 }
             } else {
@@ -69,7 +72,7 @@ final class RecentEmojiManager implements RecentEmoji {
         if (emojiList.size() > 0) {
             final StringBuilder stringBuilder = new StringBuilder(emojiList.size() * EMOJI_GUESS_SIZE);
             for (final Data data : emojiList) {
-                stringBuilder.append(data.emoji.getEmoji()).append(TIME_DELIMITER).append(data.timestamp).append(EMOJI_DELIMITER);
+                stringBuilder.append(data.emoji.getUnicode()).append(TIME_DELIMITER).append(data.timestamp).append(EMOJI_DELIMITER);
             }
 
             stringBuilder.setLength(stringBuilder.length() - EMOJI_DELIMITER.length());
@@ -90,7 +93,8 @@ final class RecentEmojiManager implements RecentEmoji {
             }
         };
 
-        @NonNull private final List<Data> emojis;
+        @NonNull
+        private final List<Data> emojis;
 
         EmojiList(final int size) {
             emojis = new ArrayList<>(size);

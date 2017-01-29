@@ -28,18 +28,25 @@ import static com.vanniktech.emoji.Utils.checkNotNull;
 
 public final class EmojiPopup {
     private static final int MIN_KEYBOARD_HEIGHT = 100;
+
     final View rootView;
     final Context context;
+
     @NonNull
     final RecentEmoji recentEmoji;
+
     final PopupWindow popupWindow;
+
     private final EmojiEditText emojiEditText;
+
     int keyBoardHeight;
     boolean isPendingOpen;
     boolean isKeyboardOpen;
+
     @Nullable OnEmojiPopupShownListener onEmojiPopupShownListener;
     @Nullable OnSoftKeyboardCloseListener onSoftKeyboardCloseListener;
     @Nullable OnSoftKeyboardOpenListener onSoftKeyboardOpenListener;
+
     private final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
@@ -81,6 +88,7 @@ public final class EmojiPopup {
             }
         }
     };
+
     @Nullable
     OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
     @Nullable

@@ -32,9 +32,9 @@
         <Bug pattern="DM_BOXED_PRIMITIVE_FOR_COMPARE"/>
     </Match>
 
-    <!-- We know what the library is doing. -->
+    <!-- Categories expose an internal array, but we know about that -->
     <Match>
-        <Package name="~com\.vanniktech\.emoji\.emoji\.category.*" />
+        <Class name="~.*Category" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
 

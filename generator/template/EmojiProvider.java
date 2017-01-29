@@ -10,11 +10,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class <%= name %>Provider implements EmojiProvider {
-
     @Override
     @NonNull
     public Map<String, EmojiCategory> getCategories() {
-        LinkedHashMap<String, EmojiCategory> result = new LinkedHashMap<>();
+        final LinkedHashMap<String, EmojiCategory> result = new LinkedHashMap<>();
 
         <%= categoryMapping %>
 

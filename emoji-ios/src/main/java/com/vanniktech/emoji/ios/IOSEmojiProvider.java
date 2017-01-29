@@ -17,11 +17,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class IOSEmojiProvider implements EmojiProvider {
-
     @Override
     @NonNull
     public Map<String, EmojiCategory> getCategories() {
-        LinkedHashMap<String, EmojiCategory> result = new LinkedHashMap<>();
+        final LinkedHashMap<String, EmojiCategory> result = new LinkedHashMap<>();
 
         result.put("People", new PeopleCategory());
         result.put("Nature", new NatureCategory());

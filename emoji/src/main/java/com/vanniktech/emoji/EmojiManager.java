@@ -16,8 +16,8 @@ import java.util.Map;
 public final class EmojiManager {
     private static final EmojiManager INSTANCE = new EmojiManager();
 
-    private Map<String, EmojiCategory> categories = new LinkedHashMap<>();
-    private EmojiTree emojiTree = new EmojiTree();
+    private final Map<String, EmojiCategory> categories = new LinkedHashMap<>();
+    private final EmojiTree emojiTree = new EmojiTree();
 
     private EmojiManager() {
         // No instances
@@ -32,10 +32,10 @@ public final class EmojiManager {
             throw new IllegalStateException("Please call the install method only once.");
         }
 
-        for (Map.Entry<String, EmojiCategory> entry : provider.getCategories().entrySet()) {
+        for (final Map.Entry<String, EmojiCategory> entry : provider.getCategories().entrySet()) {
             INSTANCE.categories.put(entry.getKey(), entry.getValue());
 
-            for (Emoji emoji : entry.getValue().getEmojis()) {
+            for (final Emoji emoji : entry.getValue().getEmojis()) {
                 INSTANCE.emojiTree.add(emoji);
             }
         }

@@ -60,7 +60,7 @@ async function parseAndCopyImages(targets) {
     console.log("Parsing files and extracting images...");
 
     for (const target of targets) {
-        await fs.emptyDir(`../emoji-${target.package}/src/main/res/drawable`);
+        await fs.emptyDir(`../emoji-${target.package}/src/main/res/drawable-nodpi`);
     }
 
     const map = new Map();
@@ -88,7 +88,7 @@ async function parseAndCopyImages(targets) {
                     row[target.imagePosition].children[0].attribs.src.replace(/^data:image\/png;base64,/, "") : null;
 
                 if (image) {
-                    await fs.writeFile(`../emoji-${target.package}/src/main/res/drawable/emoji_${code}.png`, image, "base64");
+                    await fs.writeFile(`../emoji-${target.package}/src/main/res/drawable-nodpi/emoji_${code}.png`, image, "base64");
 
                     emoji[target.package] = true;
                 }
@@ -101,7 +101,7 @@ async function parseAndCopyImages(targets) {
 
                 for (const target of targets) {
                     await fs.copy(`img/${category.toLowerCase()}.png`,
-                        `../emoji-${target.package}/src/main/res/drawable/emoji_category_${category.toLowerCase()}.png`);
+                        `../emoji-${target.package}/src/main/res/drawable-nodpi/emoji_category_${category.toLowerCase()}.png`);
                 }
             }
         }

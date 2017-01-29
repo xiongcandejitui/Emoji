@@ -51,7 +51,7 @@ final class EmojiPagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(final View view, final Object object) {
-        return view == object;
+        return view.equals(object);
     }
 
     public int numberOfRecentEmojis() {

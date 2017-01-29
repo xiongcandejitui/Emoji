@@ -144,7 +144,7 @@ async function generateCode(map, targets) {
                 }));
         }
 
-        const imports = [...map.keys()].map((category) => {
+        const imports = [...map.keys()].sort().map((category) => {
             return `import com.vanniktech.emoji.${target.package}.category.${category}Category;`
         }).join("\n");
 

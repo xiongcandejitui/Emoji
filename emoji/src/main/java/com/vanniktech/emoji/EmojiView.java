@@ -74,6 +74,7 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
 
         final int startIndex = emojiPagerAdapter.numberOfRecentEmojis() > 0 ? 0 : 1;
         emojisPager.setCurrentItem(startIndex);
+        onPageSelected(startIndex);
     }
 
     private void handleOnClicks(final ViewPager emojisPager) {

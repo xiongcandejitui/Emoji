@@ -24,10 +24,11 @@ final class EmojiPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(final ViewGroup pager, final int position) {
-        View newView;
+        final View newView;
 
         if (position == 0) {
             newView = new RecentEmojiGridView(pager.getContext()).init(listener, recentEmoji);
+
             recentEmojiGridView = (RecentEmojiGridView) newView;
         } else {
             newView = new EmojiGridView(pager.getContext())

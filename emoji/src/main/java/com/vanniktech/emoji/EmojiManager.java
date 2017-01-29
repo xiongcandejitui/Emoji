@@ -20,14 +20,14 @@ public final class EmojiManager {
     private EmojiTree emojiTree = new EmojiTree();
 
     private EmojiManager() {
-
+        // No instances
     }
 
     public static EmojiManager getInstance() {
         return INSTANCE;
     }
 
-    public static void install(EmojiProvider provider) {
+    public static void install(@NonNull final EmojiProvider provider) {
         if (!INSTANCE.categories.isEmpty() || !INSTANCE.emojiTree.isEmpty()) {
             throw new IllegalStateException("Please call the install method only once.");
         }

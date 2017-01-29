@@ -9,7 +9,7 @@ import android.support.v4.util.SparseArrayCompat;
 public final class EmojiTree {
     private final EmojiNode root = new EmojiNode(null);
 
-    public void add(@NonNull Emoji emoji) {
+    public void add(@NonNull final Emoji emoji) {
         final String unicode = emoji.getUnicode();
 
         EmojiNode current = root;
@@ -79,15 +79,15 @@ public final class EmojiTree {
             return existing;
         }
 
-        void appendLast(final char child, @NonNull Emoji emoji) {
+        void appendLast(final char child, @NonNull final Emoji newEmoji) {
             EmojiNode existing = children.get(child);
 
             if (existing == null) {
-                existing = new EmojiNode(emoji);
+                existing = new EmojiNode(newEmoji);
 
                 children.put(child, existing);
             } else {
-                existing.setEmoji(emoji);
+                existing.setEmoji(newEmoji);
             }
         }
     }

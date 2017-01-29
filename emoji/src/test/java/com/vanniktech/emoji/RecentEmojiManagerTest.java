@@ -30,17 +30,17 @@ public class RecentEmojiManagerTest {
 
     @Test
     public void addEmoji() {
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f437));
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f43d));
+        recentEmojiManager.addEmoji(new Emoji(0x1f437, R.drawable.emoji_recent));
+        recentEmojiManager.addEmoji(new Emoji(0x1f43d, R.drawable.emoji_recent));
 
-        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(2).containsExactly(Emoji.fromCodePoints(0x1f43d), Emoji.fromCodePoints(0x1f437));
+        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(2).containsExactly(new Emoji(0x1f43d, R.drawable.emoji_recent), new Emoji(0x1f437, R.drawable.emoji_recent));
     }
 
     @Test
     public void persist() {
-        final Emoji firstEmoji = Emoji.fromCodePoints(0x1f437);
+        final Emoji firstEmoji = new Emoji(0x1f437, R.drawable.emoji_recent);
         recentEmojiManager.addEmoji(firstEmoji);
-        final Emoji secondEmoji = Emoji.fromCodePoints(0x1f43d);
+        final Emoji secondEmoji = new Emoji(0x1f43d, R.drawable.emoji_recent);
         recentEmojiManager.addEmoji(secondEmoji);
 
         recentEmojiManager.persist();
@@ -51,7 +51,7 @@ public class RecentEmojiManagerTest {
 
     @Test
     public void duplicateEmojis() {
-        final Emoji emoji = Emoji.fromCodePoints(0x1f437);
+        final Emoji emoji = new Emoji(0x1f437, R.drawable.emoji_recent);
         recentEmojiManager.addEmoji(emoji);
         recentEmojiManager.addEmoji(emoji);
         recentEmojiManager.persist();
@@ -62,35 +62,36 @@ public class RecentEmojiManagerTest {
 
     @Test
     public void inOrder() {
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f55a));
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f561));
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f4e2));
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f562));
-        recentEmojiManager.addEmoji(Emoji.fromChar((char) 0xe535));
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f563));
+        recentEmojiManager.addEmoji(new Emoji(0x1f55a, R.drawable.emoji_recent));
+        recentEmojiManager.addEmoji(new Emoji(0x1f561, R.drawable.emoji_recent));
+        recentEmojiManager.addEmoji(new Emoji(0x1f4e2, R.drawable.emoji_recent));
+        recentEmojiManager.addEmoji(new Emoji(0x1f562, R.drawable.emoji_recent));
+        recentEmojiManager.addEmoji(new Emoji(0xe535, R.drawable.emoji_recent));
+        recentEmojiManager.addEmoji(new Emoji(0x1f563, R.drawable.emoji_recent));
 
         recentEmojiManager.persist();
 
         final Collection<Emoji> recentEmojis = recentEmojiManager.getRecentEmojis();
-        assertThat(recentEmojis).hasSize(6).containsExactly(Emoji.fromCodePoints(0x1f563), Emoji.fromChar((char) 0xe535), Emoji.fromCodePoints(0x1f562), Emoji.fromCodePoints(0x1f4e2), Emoji.fromCodePoints(0x1f561), Emoji.fromCodePoints(0x1f55a));
+        assertThat(recentEmojis).hasSize(6).containsExactly(new Emoji(0x1f563, R.drawable.emoji_recent), new Emoji(0xe535, R.drawable.emoji_recent), new Emoji(0x1f562, R.drawable.emoji_recent),
+                new Emoji(0x1f4e2, R.drawable.emoji_recent), new Emoji(0x1f561, R.drawable.emoji_recent), new Emoji(0x1f55a, R.drawable.emoji_recent));
     }
 
     @Test
     public void newShouldReplaceOld() {
-        recentEmojiManager.addEmoji(Emoji.fromChar((char) 0x2764));
-        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(1).containsExactly(Emoji.fromChar((char) 0x2764));
+        recentEmojiManager.addEmoji(new Emoji(0x2764, R.drawable.emoji_recent));
+        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(1).containsExactly(new Emoji(0x2764, R.drawable.emoji_recent));
 
-        recentEmojiManager.addEmoji(Emoji.fromCodePoints(0x1f577));
-        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(2).containsExactly(Emoji.fromCodePoints(0x1f577), Emoji.fromChar((char) 0x2764));
+        recentEmojiManager.addEmoji(new Emoji(0x1f577, R.drawable.emoji_recent));
+        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(2).containsExactly(new Emoji(0x1f577, R.drawable.emoji_recent), new Emoji(0x2764, R.drawable.emoji_recent));
 
-        recentEmojiManager.addEmoji(Emoji.fromChar((char) 0x2764));
-        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(2).containsExactly(Emoji.fromChar((char) 0x2764), Emoji.fromCodePoints(0x1f577));
+        recentEmojiManager.addEmoji(new Emoji(0x2764, R.drawable.emoji_recent));
+        assertThat(recentEmojiManager.getRecentEmojis()).hasSize(2).containsExactly(new Emoji(0x2764, R.drawable.emoji_recent), new Emoji(0x1f577, R.drawable.emoji_recent));
     }
 
     @Test
     public void maxRecents() {
         for (int i = 0; i < 500; i++) {
-            recentEmojiManager.addEmoji(Emoji.fromChar((char) i));
+            recentEmojiManager.addEmoji(new Emoji(i, R.drawable.emoji_recent));
         }
 
         assertThat(recentEmojiManager.getRecentEmojis()).hasSize(40);

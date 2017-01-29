@@ -10,7 +10,6 @@ import java.util.Map;
  * Interface for custom implementation of an emoji providing class.
  */
 public interface EmojiProvider {
-
     /**
      * Returns a map of categories.
      *
@@ -18,5 +17,4 @@ public interface EmojiProvider {
      */
     @NonNull
     Map<String, EmojiCategory> getCategories();
-
 }

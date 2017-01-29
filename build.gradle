@@ -73,18 +73,3 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.2'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
-
-if (System.env.TRAVIS == 'true') {
-    // To limit the memory usage when running in Travis.
-    // Travis tend to kill tasks that use too much memory.
-    allprojects {
-        tasks.withType(GroovyCompile) {
-            groovyOptions.fork = false
-        }
-        tasks.withType(Test) {
-            // containers (currently) have 2 dedicated cores and 4GB of memory
-            maxParallelForks = 2
-            minHeapSize = '128m'
-        }
-    }
-}

@@ -23,11 +23,11 @@ import java.util.List;
 
 final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
     @Nullable
-    final private OnEmojiClickedListener listener;
+    private final OnEmojiClickedListener listener;
 
     @SuppressWarnings("PMD.UseVarargs")
     EmojiArrayAdapter(@NonNull final Context context, @NonNull final Emoji[] emojis,
-                      @Nullable OnEmojiClickedListener listener) {
+                      @Nullable final OnEmojiClickedListener listener) {
         super(context, 0, toList(emojis));
 
         this.listener = listener;
@@ -56,7 +56,7 @@ final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
         image.setImageDrawable(null);
         image.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (listener != null) {
                     listener.onEmojiClicked(getItem(position));
                 }

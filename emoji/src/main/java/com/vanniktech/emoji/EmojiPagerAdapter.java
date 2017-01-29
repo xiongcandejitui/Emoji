@@ -15,6 +15,7 @@ final class EmojiPagerAdapter extends PagerAdapter {
     EmojiPagerAdapter(final OnEmojiClickedListener listener, final RecentEmoji recentEmoji) {
         this.listener = listener;
         this.recentEmoji = recentEmoji;
+        this.recentEmojiGridView = null;
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.view.View;
 public final class RepeatListener implements View.OnTouchListener {
     final long normalInterval;
     final View.OnClickListener clickListener;
+
     final Handler handler = new Handler();
     private final long initialInterval;
     View downView;

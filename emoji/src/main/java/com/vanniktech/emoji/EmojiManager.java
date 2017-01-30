@@ -20,7 +20,7 @@ public final class EmojiManager {
     private final EmojiTree emojiTree = new EmojiTree();
 
     private EmojiManager() {
-        // No instances
+        // No instances apart from singleton.
     }
 
     public static EmojiManager getInstance() {

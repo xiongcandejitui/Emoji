@@ -32,11 +32,9 @@ public final class EmojiPopup {
     final View rootView;
     final Context context;
 
-    @NonNull
-    final RecentEmoji recentEmoji;
+    @NonNull final RecentEmoji recentEmoji;
 
     final PopupWindow popupWindow;
-
     private final EmojiEditText emojiEditText;
 
     int keyBoardHeight;
@@ -89,12 +87,9 @@ public final class EmojiPopup {
         }
     };
 
-    @Nullable
-    OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
-    @Nullable
-    OnEmojiClickedListener onEmojiClickedListener;
-    @Nullable
-    OnEmojiPopupDismissListener onEmojiPopupDismissListener;
+    @Nullable OnEmojiBackspaceClickListener onEmojiBackspaceClickListener;
+    @Nullable OnEmojiClickedListener onEmojiClickedListener;
+    @Nullable OnEmojiPopupDismissListener onEmojiPopupDismissListener;
 
     EmojiPopup(@NonNull final View rootView, @NonNull final EmojiEditText emojiEditText, @Nullable final RecentEmoji recent) {
         this.context = rootView.getContext();

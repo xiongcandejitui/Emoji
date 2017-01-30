@@ -22,8 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 final class EmojiArrayAdapter extends ArrayAdapter<Emoji> {
-    @Nullable
-    private final OnEmojiClickedListener listener;
+    @Nullable private final OnEmojiClickedListener listener;
 
     @SuppressWarnings("PMD.UseVarargs")
     EmojiArrayAdapter(@NonNull final Context context, @NonNull final Emoji[] emojis,

@@ -8,10 +8,8 @@ import java.io.Serializable;
 public final class Emoji implements Serializable {
     private static final long serialVersionUID = 2L;
 
-    @NonNull
-    private final String unicode;
-    @DrawableRes
-    private final int resource;
+    @NonNull private final String unicode;
+    @DrawableRes private final int resource;
 
     public Emoji(@NonNull final String unicode, @DrawableRes final int resource) {
         this.unicode = unicode;

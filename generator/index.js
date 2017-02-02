@@ -133,7 +133,11 @@ async function generateCode(map, targets) {
             const data = emojis.filter(it => it[target.package]).map(it => it.unicode).map((it) => {
                 const unicodeParts = it.split("_");
 
-                return `new Emoji(new String(new int[]\{${unicodeParts.map(it => "0x" + it).join(", ")}}, 0, ${unicodeParts.length}), R.drawable.emoji_${it})`;
+                if (unicodeParts.length == 1) {
+                    return `new Emoji(0x${unicodeParts[0]}, R.drawable.emoji_${it})`;
+                } else {
+                    return `new Emoji(new int[]{${unicodeParts.map(it => "0x" + it).join(", ")}}, R.drawable.emoji_${it})`;
+                }
             }).join(",\n            ");
 
             await fs.writeFile(`${dir + category}Category.java`,

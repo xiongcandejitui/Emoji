@@ -16,8 +16,8 @@ import java.util.Map;
 public final class EmojiManager {
     private static final EmojiManager INSTANCE = new EmojiManager();
 
-    private final Map<String, EmojiCategory> categories = new LinkedHashMap<>();
-    private final EmojiTree emojiTree = new EmojiTree();
+    private Map<String, EmojiCategory> categories = new LinkedHashMap<>();
+    private EmojiTree emojiTree = new EmojiTree();
 
     private EmojiManager() {
         // No instances apart from singleton.
@@ -39,6 +39,11 @@ public final class EmojiManager {
                 INSTANCE.emojiTree.add(emoji);
             }
         }
+    }
+
+    public static void destroy() {
+        INSTANCE.categories = new LinkedHashMap<>();
+        INSTANCE.emojiTree = new EmojiTree();
     }
 
     public List<Pair<String, EmojiCategory>> getCategories() {

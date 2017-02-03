@@ -9,7 +9,7 @@ const download = require("download");
  */
 const targets = [{
     package: "ios",
-    name: "IOSEmoji",
+    name: "IosEmoji",
     imagePosition: 4
 }, {
     package: "one",

@@ -3,14 +3,14 @@ package com.vanniktech.emoji;
 import android.support.annotation.NonNull;
 import com.vanniktech.emoji.emoji.Emoji;
 import com.vanniktech.emoji.emoji.EmojiCategory;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,25 +20,25 @@ public class EmojiManagerTest {
 
   @Before public void setUp() {
     provider = new EmojiProvider() {
-      @NonNull @Override public Map<String, EmojiCategory> getCategories() {
-        final Map<String, EmojiCategory> result = new HashMap<>();
+      @NonNull @Override public Iterable<EmojiCategory> getCategories() {
+          return Collections.<EmojiCategory>singletonList(
+                  new EmojiCategory() {
+                      @NonNull
+                      @Override
+                      public Emoji[] getEmojis() {
+                          return new Emoji[]{
+                                  new Emoji(new int[]{0x1234}, R.drawable.emoji_recent),
+                                  new Emoji(new int[]{0x4321}, R.drawable.emoji_recent),
+                                  new Emoji(new int[]{0x5678}, R.drawable.emoji_backspace),
+                                  new Emoji(new int[]{0x1234, 0x4321, 0x9999}, R.drawable.emoji_recent)
+                          };
+                      }
 
-        result.put("Test", new EmojiCategory() {
-          @NonNull @Override public Emoji[] getEmojis() {
-            return new Emoji[] {
-                new Emoji(new int[] { 0x1234 }, R.drawable.emoji_recent),
-                new Emoji(new int[] { 0x4321 }, R.drawable.emoji_recent),
-                new Emoji(new int[] { 0x5678 }, R.drawable.emoji_backspace),
-                new Emoji(new int[] { 0x1234, 0x4321, 0x9999 }, R.drawable.emoji_recent)
-            };
-          }
-
-          @Override public int getIcon() {
-            return R.drawable.emoji_recent;
-          }
-        });
-
-        return result;
+                      @Override
+                      public int getIcon() {
+                          return R.drawable.emoji_recent;
+                      }
+                  });
       }
     };
   }
@@ -77,4 +77,5 @@ public class EmojiManagerTest {
 
     assertThat(EmojiManager.getInstance().findEmoji("")).isNull();
   }
+
 }

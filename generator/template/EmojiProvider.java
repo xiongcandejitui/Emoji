@@ -9,7 +9,7 @@ import com.vanniktech.emoji.emoji.EmojiCategory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class <%= name %>Provider implements EmojiProvider {
+public final class <%= name %>Provider implements EmojiProvider {
     @Override
     @NonNull
     public Map<String, EmojiCategory> getCategories() {

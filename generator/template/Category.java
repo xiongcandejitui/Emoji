@@ -8,7 +8,7 @@ import com.vanniktech.emoji.emoji.EmojiCategory;
 import com.vanniktech.emoji.<%= package %>.R;
 
 @SuppressWarnings({"checkstyle:magicnumber", "PMD.MethodReturnsInternalArray"})
-public class <%= name %>Category implements EmojiCategory {
+public final class <%= name %>Category implements EmojiCategory {
     private static final Emoji[] DATA = new Emoji[]{
             <%= data %>
     };

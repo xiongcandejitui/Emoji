@@ -16,7 +16,7 @@ import com.vanniktech.emoji.one.category.SymbolsCategory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class EmojiOneProvider implements EmojiProvider {
+public final class EmojiOneProvider implements EmojiProvider {
     @Override
     @NonNull
     public Map<String, EmojiCategory> getCategories() {

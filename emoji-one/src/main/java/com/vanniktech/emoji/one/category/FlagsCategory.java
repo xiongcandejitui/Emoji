@@ -8,7 +8,7 @@ import com.vanniktech.emoji.emoji.EmojiCategory;
 import com.vanniktech.emoji.one.R;
 
 @SuppressWarnings({"checkstyle:magicnumber", "PMD.MethodReturnsInternalArray"})
-public class FlagsCategory implements EmojiCategory {
+public final class FlagsCategory implements EmojiCategory {
     private static final Emoji[] DATA = new Emoji[]{
             new Emoji(0x1f3c1, R.drawable.emoji_1f3c1),
             new Emoji(0x1f6a9, R.drawable.emoji_1f6a9),

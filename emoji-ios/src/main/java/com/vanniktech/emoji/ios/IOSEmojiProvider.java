@@ -16,7 +16,7 @@ import com.vanniktech.emoji.ios.category.SymbolsCategory;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class IOSEmojiProvider implements EmojiProvider {
+public final class IOSEmojiProvider implements EmojiProvider {
     @Override
     @NonNull
     public Map<String, EmojiCategory> getCategories() {

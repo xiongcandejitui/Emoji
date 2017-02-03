@@ -6,17 +6,14 @@ import com.vanniktech.emoji.EmojiProvider;
 import com.vanniktech.emoji.emoji.EmojiCategory;
 <%= imports %>
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 public final class <%= name %>Provider implements EmojiProvider {
     @Override
     @NonNull
-    public Map<String, EmojiCategory> getCategories() {
-        final LinkedHashMap<String, EmojiCategory> result = new LinkedHashMap<>();
-
-        <%= categoryMapping %>
-
-        return result;
+    public Iterable<EmojiCategory> getCategories() {
+        return Arrays.asList(
+                <%= categoryMapping %>
+        );
     }
 }

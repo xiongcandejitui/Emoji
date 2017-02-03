@@ -154,8 +154,8 @@ async function generateCode(map, targets) {
         }).join("\n");
 
         const categoryMapping = [...map.keys()].map((category) => {
-            return `result.put("${category}", new ${category}Category());`
-        }).join("\n        ");
+            return `new ${category}Category()`
+        }).join(",\n                ");
 
         await fs.writeFile(`../emoji-${target.package}/src/main/java/com/vanniktech/emoji/${target.package}/${target.name}Provider.java`, _(emojiProviderTemplate).template()({
             package: target.package,

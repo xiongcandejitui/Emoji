@@ -8,7 +8,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.TypedValue;
@@ -58,12 +57,12 @@ final class EmojiView extends LinearLayout implements ViewPager.OnPageChangeList
         final LinearLayout emojisTab = (LinearLayout) findViewById(R.id.emojis_tab);
         emojisPager.addOnPageChangeListener(this);
 
-        final List<Pair<String, EmojiCategory>> categories = EmojiManager.getInstance().getCategories();
+        final List<EmojiCategory> categories = EmojiManager.getInstance().getCategories();
 
         emojiTabs = new ImageButton[categories.size() + 2];
         emojiTabs[0] = inflateButton(context, R.drawable.emoji_recent, emojisTab);
         for (int i = 0; i < categories.size(); i++) {
-            emojiTabs[i + 1] = inflateButton(context, categories.get(i).second.getIcon(), emojisTab);
+            emojiTabs[i + 1] = inflateButton(context, categories.get(i).getIcon(), emojisTab);
         }
         emojiTabs[emojiTabs.length - 1] = inflateButton(context, R.drawable.emoji_backspace, emojisTab);
 

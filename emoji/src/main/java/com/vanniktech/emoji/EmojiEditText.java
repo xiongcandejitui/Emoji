@@ -28,6 +28,7 @@ public class EmojiEditText extends AppCompatEditText {
     if (attrs == null) {
       emojiSize = (int) getTextSize();
     } else {
+      //noinspection AndroidLintCustomViewStyleable
       final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.emoji);
 
       try {
